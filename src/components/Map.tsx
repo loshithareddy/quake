@@ -155,3 +155,5 @@ const Map = ({ earthquakes }: MapProps) => {
     </div>
   );
 };
+
+export default Map;
