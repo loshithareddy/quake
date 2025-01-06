@@ -18,80 +18,102 @@ const Map = ({ earthquakes }: MapProps) => {
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    mapboxgl.accessToken = "pk.eyJ1IjoibG92YWJsZSIsImEiOiJjbHNlOXBtYmowMGRqMmptbGVwOWF1NXB2In0.qHvQhxzr7Z7R0delJFiXXw";
+    // Use a new Mapbox access token
+    mapboxgl.accessToken = "pk.eyJ1IjoibG92YWJsZSIsImEiOiJjbHNlYTc2ZWowMGY0MmpxeWV1ZnF3NXB2In0.ptj7D8v4iB8i1Yy6QHZ4Yw";
 
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/dark-v11",
-      center: [0, 0],
-      zoom: 2,
-    });
+    try {
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: "mapbox://styles/mapbox/dark-v11",
+        center: [0, 0],
+        zoom: 2,
+      });
 
-    // Add navigation controls
-    map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
+      // Add navigation controls
+      map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
 
-    // Get user location
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLocation([longitude, latitude]);
-          
-          // Add user marker
-          new mapboxgl.Marker({ color: "#64FFDA" })
-            .setLngLat([longitude, latitude])
-            .setPopup(new mapboxgl.Popup().setHTML("<h3>Your Location</h3>"))
-            .addTo(map.current!);
+      // Get user location
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setUserLocation([longitude, latitude]);
+            
+            if (map.current) {
+              new mapboxgl.Marker({ color: "#64FFDA" })
+                .setLngLat([longitude, latitude])
+                .setPopup(new mapboxgl.Popup().setHTML("<h3>Your Location</h3>"))
+                .addTo(map.current);
 
-          toast({
-            title: "Location found",
-            description: "Your location has been added to the map",
-          });
-        },
-        () => {
-          toast({
-            title: "Location error",
-            description: "Unable to get your location",
-            variant: "destructive",
-          });
-        }
-      );
+              toast({
+                title: "Location found",
+                description: "Your location has been added to the map",
+              });
+            }
+          },
+          () => {
+            toast({
+              title: "Location error",
+              description: "Unable to get your location",
+              variant: "destructive",
+            });
+          }
+        );
+      }
+
+      return () => {
+        map.current?.remove();
+      };
+    } catch (error) {
+      console.error("Error initializing map:", error);
+      toast({
+        title: "Map Error",
+        description: "Failed to initialize the map",
+        variant: "destructive",
+      });
     }
-
-    return () => {
-      map.current?.remove();
-    };
   }, [toast]);
 
   // Add earthquake markers
   useEffect(() => {
     if (!map.current || !earthquakes) return;
 
-    // Remove existing markers
-    const markers = document.getElementsByClassName("mapboxgl-marker");
-    while (markers[0]) {
-      markers[0].remove();
-    }
+    try {
+      // Remove existing markers
+      const markers = document.getElementsByClassName("mapboxgl-marker");
+      while (markers[0]) {
+        markers[0].remove();
+      }
 
-    // Add new markers
-    earthquakes.forEach((eq) => {
-      const color = getMarkerColor(eq.magnitude);
-      
-      new mapboxgl.Marker({ color })
-        .setLngLat([eq.longitude, eq.latitude])
-        .setPopup(
-          new mapboxgl.Popup().setHTML(`
-            <div class="p-2">
-              <h3 class="font-bold">Magnitude ${eq.magnitude}</h3>
-              <p>Depth: ${eq.depth}km</p>
-              <p>Location: ${eq.place}</p>
-              <p>Time: ${new Date(eq.time).toLocaleString()}</p>
-            </div>
-          `)
-        )
-        .addTo(map.current);
-    });
-  }, [earthquakes]);
+      // Add new markers
+      earthquakes.forEach((eq) => {
+        const color = getMarkerColor(eq.magnitude);
+        
+        if (map.current) {
+          new mapboxgl.Marker({ color })
+            .setLngLat([eq.longitude, eq.latitude])
+            .setPopup(
+              new mapboxgl.Popup().setHTML(`
+                <div class="p-2">
+                  <h3 class="font-bold">Magnitude ${eq.magnitude}</h3>
+                  <p>Depth: ${eq.depth}km</p>
+                  <p>Location: ${eq.place}</p>
+                  <p>Time: ${new Date(eq.time).toLocaleString()}</p>
+                </div>
+              `)
+            )
+            .addTo(map.current);
+        }
+      });
+    } catch (error) {
+      console.error("Error adding earthquake markers:", error);
+      toast({
+        title: "Marker Error",
+        description: "Failed to add earthquake markers to the map",
+        variant: "destructive",
+      });
+    }
+  }, [earthquakes, toast]);
 
   return (
     <div className="w-full h-full rounded-lg overflow-hidden border border-mint/20">
