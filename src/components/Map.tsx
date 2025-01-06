@@ -8,6 +8,13 @@ interface MapProps {
   earthquakes?: Earthquake[];
 }
 
+const getMarkerColor = (magnitude: number): string => {
+  if (magnitude >= 7) return "#FF0000"; // Red for severe
+  if (magnitude >= 5) return "#FFA500"; // Orange for strong
+  if (magnitude >= 3) return "#FFFF00"; // Yellow for moderate
+  return "#00FF00"; // Green for light
+};
+
 const Map = ({ earthquakes }: MapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -148,13 +155,3 @@ const Map = ({ earthquakes }: MapProps) => {
     </div>
   );
 };
-
-// Helper function to determine marker color based on magnitude
-const getMarkerColor = (magnitude: number): string => {
-  if (magnitude >= 7) return "#FF0000";
-  if (magnitude >= 5) return "#FFA500";
-  if (magnitude >= 3) return "#FFFF00";
-  return "#00FF00";
-};
-
-export default Map;
