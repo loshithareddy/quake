@@ -12,16 +12,17 @@ const Map = ({ earthquakes }: MapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [mapboxToken, setMapboxToken] = useState("");
+  const [isMapInitialized, setIsMapInitialized] = useState(false);
   const { toast } = useToast();
 
   // Initialize map
   useEffect(() => {
-    if (!mapContainer.current) return;
-
-    // Use a new Mapbox access token
-    mapboxgl.accessToken = "pk.eyJ1IjoibG92YWJsZSIsImEiOiJjbHNlYTc2ZWowMGY0MmpxeWV1ZnF3NXB2In0.ptj7D8v4iB8i1Yy6QHZ4Yw";
+    if (!mapContainer.current || !mapboxToken || isMapInitialized) return;
 
     try {
+      mapboxgl.accessToken = mapboxToken;
+      
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/dark-v11",
@@ -29,54 +30,70 @@ const Map = ({ earthquakes }: MapProps) => {
         zoom: 2,
       });
 
-      // Add navigation controls
-      map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
+      map.current.on('load', () => {
+        setIsMapInitialized(true);
+        
+        // Add navigation controls
+        if (map.current) {
+          map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
+        }
 
-      // Get user location
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setUserLocation([longitude, latitude]);
-            
-            if (map.current) {
-              new mapboxgl.Marker({ color: "#64FFDA" })
-                .setLngLat([longitude, latitude])
-                .setPopup(new mapboxgl.Popup().setHTML("<h3>Your Location</h3>"))
-                .addTo(map.current);
+        // Get user location
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              setUserLocation([longitude, latitude]);
+              
+              if (map.current) {
+                new mapboxgl.Marker({ color: "#64FFDA" })
+                  .setLngLat([longitude, latitude])
+                  .setPopup(new mapboxgl.Popup().setHTML("<h3>Your Location</h3>"))
+                  .addTo(map.current);
 
+                toast({
+                  title: "Location found",
+                  description: "Your location has been added to the map",
+                });
+              }
+            },
+            () => {
               toast({
-                title: "Location found",
-                description: "Your location has been added to the map",
+                title: "Location error",
+                description: "Unable to get your location",
+                variant: "destructive",
               });
             }
-          },
-          () => {
-            toast({
-              title: "Location error",
-              description: "Unable to get your location",
-              variant: "destructive",
-            });
-          }
-        );
-      }
+          );
+        }
+      });
+
+      map.current.on('error', (e) => {
+        console.error('Mapbox error:', e);
+        toast({
+          title: "Map Error",
+          description: "There was an error initializing the map. Please check your Mapbox token.",
+          variant: "destructive",
+        });
+      });
 
       return () => {
         map.current?.remove();
+        setIsMapInitialized(false);
       };
     } catch (error) {
       console.error("Error initializing map:", error);
       toast({
         title: "Map Error",
-        description: "Failed to initialize the map",
+        description: "Failed to initialize the map. Please check your Mapbox token.",
         variant: "destructive",
       });
     }
-  }, [toast]);
+  }, [mapboxToken, toast, isMapInitialized]);
 
   // Add earthquake markers
   useEffect(() => {
-    if (!map.current || !earthquakes) return;
+    if (!map.current || !earthquakes || !isMapInitialized) return;
 
     try {
       // Remove existing markers
@@ -113,7 +130,30 @@ const Map = ({ earthquakes }: MapProps) => {
         variant: "destructive",
       });
     }
-  }, [earthquakes, toast]);
+  }, [earthquakes, toast, isMapInitialized]);
+
+  if (!mapboxToken) {
+    return (
+      <div className="w-full h-full rounded-lg overflow-hidden border border-mint/20 flex items-center justify-center">
+        <div className="max-w-md p-6 text-center">
+          <h2 className="text-lg font-semibold mb-4">Mapbox Token Required</h2>
+          <p className="text-sm text-gray-400 mb-4">
+            Please enter your Mapbox public token to initialize the map. You can find this in your Mapbox account dashboard.
+          </p>
+          <input
+            type="text"
+            value={mapboxToken}
+            onChange={(e) => setMapboxToken(e.target.value)}
+            placeholder="Enter your Mapbox token"
+            className="w-full p-2 mb-4 rounded border border-mint/20 bg-transparent text-white"
+          />
+          <p className="text-xs text-gray-500">
+            Visit <a href="https://mapbox.com" target="_blank" rel="noopener noreferrer" className="text-mint hover:underline">mapbox.com</a> to get your token
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full rounded-lg overflow-hidden border border-mint/20">
