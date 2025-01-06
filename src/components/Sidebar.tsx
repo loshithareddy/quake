@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import type { Earthquake } from "@/lib/types";
-import { Clock, History, Shield, MessageSquare } from "lucide-react";
+import { Clock, History, Shield, MessageSquare, ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
