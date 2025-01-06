@@ -30,6 +30,57 @@ const Sidebar = ({ earthquakes }: SidebarProps) => {
     "Have a family emergency plan",
   ];
 
+  const historicalEvents = [
+    {
+      name: "1960 Valdivia Earthquake (Chile)",
+      magnitude: "9.5",
+      description: "The most powerful earthquake ever recorded",
+      region: "South America"
+    },
+    {
+      name: "2011 Tōhoku Earthquake (Japan)",
+      magnitude: "9.1",
+      description: "Triggered devastating tsunami and nuclear disaster",
+      region: "Asia"
+    },
+    {
+      name: "2004 Indian Ocean Earthquake",
+      magnitude: "9.1",
+      description: "Triggered devastating tsunamis affecting multiple countries",
+      region: "Asia"
+    },
+    {
+      name: "1964 Alaska Earthquake",
+      magnitude: "9.2",
+      description: "The most powerful earthquake recorded in North America",
+      region: "North America"
+    },
+    {
+      name: "2010 Haiti Earthquake",
+      magnitude: "7.0",
+      description: "One of the most destructive in the Caribbean region",
+      region: "Caribbean"
+    },
+    {
+      name: "1556 Shaanxi Earthquake (China)",
+      magnitude: "~8.0",
+      description: "Deadliest earthquake in recorded history",
+      region: "Asia"
+    },
+    {
+      name: "1755 Lisbon Earthquake",
+      magnitude: "~8.5",
+      description: "Major earthquake that reshaped European history",
+      region: "Europe"
+    },
+    {
+      name: "2015 Nepal Earthquake",
+      magnitude: "7.8",
+      description: "Devastating earthquake in the Himalayas",
+      region: "Asia"
+    }
+  ];
+
   return (
     <aside className="w-96 bg-forest-light border-r border-mint/20 p-4 overflow-y-auto">
       <div className="mb-6 text-center">
@@ -98,18 +149,14 @@ const Sidebar = ({ earthquakes }: SidebarProps) => {
           </CollapsibleTrigger>
           <CollapsibleContent className="p-4">
             <div className="space-y-3">
-              <div className="p-3 bg-forest rounded-lg border border-mint/20">
-                <div className="font-semibold text-mint">2001 Gujarat Earthquake</div>
-                <p className="text-white/80">Magnitude 7.7 - One of India's most devastating earthquakes</p>
-              </div>
-              <div className="p-3 bg-forest rounded-lg border border-mint/20">
-                <div className="font-semibold text-mint">2004 Indian Ocean Earthquake</div>
-                <p className="text-white/80">Magnitude 9.1 - Triggered devastating tsunamis</p>
-              </div>
-              <div className="p-3 bg-forest rounded-lg border border-mint/20">
-                <div className="font-semibold text-mint">2015 Nepal Earthquake</div>
-                <p className="text-white/80">Magnitude 7.8 - Affected parts of North India</p>
-              </div>
+              {historicalEvents.map((event, index) => (
+                <div key={index} className="p-3 bg-forest rounded-lg border border-mint/20">
+                  <div className="font-semibold text-mint">{event.name}</div>
+                  <div className="text-white/80">Magnitude {event.magnitude}</div>
+                  <p className="text-white/80">{event.description}</p>
+                  <span className="text-xs text-mint/60">Region: {event.region}</span>
+                </div>
+              ))}
             </div>
           </CollapsibleContent>
         </Collapsible>
