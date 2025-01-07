@@ -6,4 +6,5 @@ export interface Earthquake {
   latitude: number;
   longitude: number;
   depth: number;
+  source?: string;
 }

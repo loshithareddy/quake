@@ -11,28 +11,47 @@ interface LocationSeismicDataProps {
 
 export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) => {
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedSource, setSelectedSource] = useState("all");
   
-  const filteredEarthquakes = earthquakes?.filter(eq => 
-    eq.place?.toLowerCase().includes(selectedLocation.toLowerCase())
-  );
+  const sources = ["all", "IMD", "NCS", "USGS", "EMSC", "IRIS"];
+  
+  const filteredEarthquakes = earthquakes?.filter(eq => {
+    const locationMatch = eq.place?.toLowerCase().includes(selectedLocation.toLowerCase());
+    const sourceMatch = selectedSource === "all" || eq.source === selectedSource;
+    return locationMatch && sourceMatch;
+  });
 
   return (
     <Collapsible className="border border-mint/20 rounded-lg">
       <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-mint hover:bg-forest/50">
         <span className="flex items-center">
           <AlertTriangle className="mr-2" />
-          Recent Earthquakes & Activity
+          Seismic Activity in India
         </span>
         <ChevronDown className="h-4 w-4" />
       </CollapsibleTrigger>
       <CollapsibleContent className="p-4 space-y-3">
-        <input
-          type="text"
-          placeholder="Enter location to filter data..."
-          value={selectedLocation}
-          onChange={(e) => setSelectedLocation(e.target.value)}
-          className="w-full p-2 mb-4 bg-transparent border border-mint/20 rounded text-white"
-        />
+        <div className="space-y-2">
+          <input
+            type="text"
+            placeholder="Enter location to filter data..."
+            value={selectedLocation}
+            onChange={(e) => setSelectedLocation(e.target.value)}
+            className="w-full p-2 bg-transparent border border-mint/20 rounded text-white"
+          />
+          
+          <select
+            value={selectedSource}
+            onChange={(e) => setSelectedSource(e.target.value)}
+            className="w-full p-2 bg-forest border border-mint/20 rounded text-white"
+          >
+            {sources.map(source => (
+              <option key={source} value={source}>
+                {source === "all" ? "All Sources" : source}
+              </option>
+            ))}
+          </select>
+        </div>
         
         <SeismicGraph earthquakes={filteredEarthquakes} />
         
@@ -47,7 +66,10 @@ export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) =
               </span>
             </div>
             <p className="text-white/80 mb-1">{eq.place}</p>
-            <p className="text-sm text-white/60">Depth: {eq.depth}km</p>
+            <div className="flex justify-between">
+              <p className="text-sm text-white/60">Depth: {eq.depth}km</p>
+              <span className="text-xs text-mint/60">Source: {eq.source || "USGS"}</span>
+            </div>
           </div>
         ))}
         
