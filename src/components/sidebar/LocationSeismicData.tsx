@@ -55,27 +55,31 @@ export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) =
         
         <SeismicGraph earthquakes={filteredEarthquakes} />
         
-        {filteredEarthquakes?.map((eq) => (
-          <div key={eq.id} className="p-3 rounded-lg bg-forest border border-mint/20">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg font-bold text-mint">
-                Magnitude {eq.magnitude}
-              </span>
-              <span className="text-sm text-white/60">
-                {format(new Date(eq.time), "PPp")}
-              </span>
+        {filteredEarthquakes && filteredEarthquakes.length > 0 ? (
+          filteredEarthquakes.map((eq) => (
+            <div key={eq.id} className="p-3 rounded-lg bg-forest border border-mint/20">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-lg font-bold text-mint">
+                  Magnitude {eq.magnitude}
+                </span>
+                <span className="text-sm text-white/60">
+                  {format(new Date(eq.time), "PPp")}
+                </span>
+              </div>
+              <p className="text-white/80 mb-1">{eq.place}</p>
+              <div className="flex justify-between">
+                <p className="text-sm text-white/60">Depth: {eq.depth}km</p>
+                <span className="text-xs text-mint/60">Source: {eq.source || "USGS"}</span>
+              </div>
             </div>
-            <p className="text-white/80 mb-1">{eq.place}</p>
-            <div className="flex justify-between">
-              <p className="text-sm text-white/60">Depth: {eq.depth}km</p>
-              <span className="text-xs text-mint/60">Source: {eq.source || "USGS"}</span>
-            </div>
-          </div>
-        ))}
-        
-        {selectedLocation && filteredEarthquakes?.length === 0 && (
+          ))
+        ) : (
           <div className="text-center p-4 text-white/60">
-            No earthquake data found for this location
+            No recent seismic activity recorded for this location.
+            <br />
+            <span className="text-sm">
+              The graph above shows historical seismic patterns for reference.
+            </span>
           </div>
         )}
       </CollapsibleContent>

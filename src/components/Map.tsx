@@ -8,6 +8,8 @@ interface MapProps {
   earthquakes?: Earthquake[];
 }
 
+const MAPBOX_TOKEN = "pk.eyJ1IjoiZWFydGgxMjMiLCJhIjoiY201bGtwNWk5MW9jNDJpc2Rzazd3bDRzNCJ9.w4fTRntk2IsCm1B_hjfb1g";
+
 const getMarkerColor = (magnitude: number): string => {
   if (magnitude >= 7) return "#FF0000"; // Red for severe
   if (magnitude >= 5) return "#FFA500"; // Orange for strong
@@ -19,16 +21,15 @@ const Map = ({ earthquakes }: MapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  const [mapboxToken, setMapboxToken] = useState("");
   const [isMapInitialized, setIsMapInitialized] = useState(false);
   const { toast } = useToast();
 
   // Initialize map
   useEffect(() => {
-    if (!mapContainer.current || !mapboxToken) return;
+    if (!mapContainer.current) return;
 
     try {
-      mapboxgl.accessToken = mapboxToken;
+      mapboxgl.accessToken = MAPBOX_TOKEN;
       
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
@@ -81,11 +82,11 @@ const Map = ({ earthquakes }: MapProps) => {
       console.error("Error initializing map:", error);
       toast({
         title: "Map Error",
-        description: "Failed to initialize the map. Please check your Mapbox token.",
+        description: "Failed to initialize the map",
         variant: "destructive",
       });
     }
-  }, [mapboxToken, toast]);
+  }, [toast]);
 
   // Add earthquake markers only after map is initialized
   useEffect(() => {
@@ -125,29 +126,6 @@ const Map = ({ earthquakes }: MapProps) => {
       });
     }
   }, [earthquakes, isMapInitialized, toast]);
-
-  if (!mapboxToken) {
-    return (
-      <div className="w-full h-full rounded-lg overflow-hidden border border-mint/20 flex items-center justify-center">
-        <div className="max-w-md p-6 text-center">
-          <h2 className="text-lg font-semibold mb-4">Mapbox Token Required</h2>
-          <p className="text-sm text-gray-400 mb-4">
-            Please enter your Mapbox public token to initialize the map. You can find this in your Mapbox account dashboard.
-          </p>
-          <input
-            type="text"
-            value={mapboxToken}
-            onChange={(e) => setMapboxToken(e.target.value)}
-            placeholder="Enter your Mapbox token"
-            className="w-full p-2 mb-4 rounded border border-mint/20 bg-transparent text-white"
-          />
-          <p className="text-xs text-gray-500">
-            Visit <a href="https://mapbox.com" target="_blank" rel="noopener noreferrer" className="text-mint hover:underline">mapbox.com</a> to get your token
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full h-full rounded-lg overflow-hidden border border-mint/20">
