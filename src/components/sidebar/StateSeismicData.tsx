@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { Earthquake } from "@/lib/types";
+import SeismicGraph from "../SeismicGraph";
 
 interface StateSeismicDataProps {
   earthquakes?: Earthquake[];
@@ -46,6 +47,8 @@ export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
           ))}
         </select>
 
+        <SeismicGraph earthquakes={earthquakes} />
+
         {selectedState === "all" ? (
           indianStates.map(state => {
             const stateEarthquakes = getStateEarthquakes(state);
@@ -87,11 +90,6 @@ export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
                 </div>
               </div>
             ))}
-            {getStateEarthquakes(selectedState).length === 0 && (
-              <p className="text-center text-white/60 py-4">
-                No recent seismic activity recorded in {selectedState}
-              </p>
-            )}
           </div>
         )}
       </CollapsibleContent>

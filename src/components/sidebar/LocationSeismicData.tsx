@@ -53,9 +53,9 @@ export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) =
           </select>
         </div>
         
-        <SeismicGraph earthquakes={filteredEarthquakes} />
+        <SeismicGraph earthquakes={earthquakes} />
         
-        {filteredEarthquakes && filteredEarthquakes.length > 0 ? (
+        {filteredEarthquakes && filteredEarthquakes.length > 0 && (
           filteredEarthquakes.map((eq) => (
             <div key={eq.id} className="p-3 rounded-lg bg-forest border border-mint/20">
               <div className="flex items-center justify-between mb-2">
@@ -73,14 +73,6 @@ export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) =
               </div>
             </div>
           ))
-        ) : (
-          <div className="text-center p-4 text-white/60">
-            No recent seismic activity recorded for this location.
-            <br />
-            <span className="text-sm">
-              The graph above shows historical seismic patterns for reference.
-            </span>
-          </div>
         )}
       </CollapsibleContent>
     </Collapsible>
