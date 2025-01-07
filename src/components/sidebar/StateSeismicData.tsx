@@ -27,6 +27,10 @@ export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
     );
   };
 
+  const filteredEarthquakes = selectedState === "all" 
+    ? earthquakes 
+    : getStateEarthquakes(selectedState);
+
   return (
     <Collapsible className="border border-mint/20 rounded-lg">
       <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-mint hover:bg-forest/50">
@@ -47,7 +51,7 @@ export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
           ))}
         </select>
 
-        <SeismicGraph earthquakes={earthquakes} />
+        <SeismicGraph earthquakes={filteredEarthquakes} />
 
         {selectedState === "all" ? (
           indianStates.map(state => {
