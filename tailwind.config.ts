@@ -20,14 +20,14 @@ export default {
     extend: {
       colors: {
         forest: {
-          DEFAULT: "#0A1F2F", // Main background color
-          light: "#132B41", // Slightly lighter variant for cards/sections
+          DEFAULT: "#33C3F0", // Changed to sky blue
+          light: "#4DD0FF", // Lighter sky blue variant
         },
         mint: {
-          DEFAULT: "#64FFDA", // Primary accent color
+          DEFAULT: "#FFDEE2", // Changed to soft pink
         },
         divine: {
-          DEFAULT: "#FFD700", // Secondary accent color
+          DEFAULT: "#FFD700", // Kept gold for accent
         }
       },
       fontFamily: {
