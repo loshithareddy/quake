@@ -20,14 +20,14 @@ export default {
     extend: {
       colors: {
         forest: {
-          DEFAULT: "#33C3F0", // Changed to sky blue
-          light: "#4DD0FF", // Lighter sky blue variant
+          DEFAULT: "#1EAEDB", // Brighter, more vibrant blue
+          light: "#0FA0CE", // Slightly darker blue for contrast
         },
         mint: {
-          DEFAULT: "#FFDEE2", // Changed to soft pink
+          DEFAULT: "#FDE1D3", // Soft peach color
         },
         divine: {
-          DEFAULT: "#FFD700", // Kept gold for accent
+          DEFAULT: "#E5DEFF", // Soft purple for accent
         }
       },
       fontFamily: {

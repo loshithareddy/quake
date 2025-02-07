@@ -28,7 +28,7 @@
   }
 
   body {
-    @apply bg-gradient-to-br from-[#FFDEE2] via-[#F0F9FF] to-[#33C3F0] text-forest antialiased min-h-screen;
+    @apply bg-gradient-to-br from-[#FDE1D3] via-[#E5DEFF] to-[#1EAEDB] text-forest antialiased min-h-screen;
   }
 
   ::selection {
@@ -39,22 +39,22 @@
 .glass-nav {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 222, 226, 0.1);
+  border-bottom: 1px solid rgba(253, 225, 211, 0.1);
 }
 
 .seismic-card {
-  @apply bg-white/80 backdrop-blur-sm border border-[#FFDEE2] rounded-xl p-4 transition-all hover:shadow-lg;
+  @apply bg-white/80 backdrop-blur-sm border border-[#FDE1D3] rounded-xl p-4 transition-all hover:shadow-lg;
   background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
 }
 
 .risk-high {
-  @apply bg-[#FFDEE2]/80 border-[#FFDEE2];
+  @apply bg-[#FDE1D3]/80 border-[#FDE1D3];
 }
 
 .risk-moderate {
-  @apply bg-[#F0F9FF]/80 border-[#33C3F0];
+  @apply bg-[#E5DEFF]/80 border-[#1EAEDB];
 }
 
 .risk-low {
-  @apply bg-[#F0F9FF]/80 border-[#33C3F0];
+  @apply bg-[#E5DEFF]/80 border-[#1EAEDB];
 }
