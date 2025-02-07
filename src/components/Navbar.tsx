@@ -5,24 +5,24 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-bold text-white">
-          ByteHire
+        <Link to="/" className="text-2xl font-bold text-forest">
+          SeismicWatch
         </Link>
         <div className="hidden md:flex items-center space-x-8">
-          <Link to="/app" className="text-white/90 hover:text-white transition-colors">
-            App
+          <Link to="/app" className="text-forest/90 hover:text-forest transition-colors">
+            Dashboard
           </Link>
-          <Link to="/pricing" className="text-white/90 hover:text-white transition-colors">
-            Pricing
+          <Link to="/map" className="text-forest/90 hover:text-forest transition-colors">
+            Map
           </Link>
-          <Link to="/about" className="text-white/90 hover:text-white transition-colors">
-            About Us
+          <Link to="/alerts" className="text-forest/90 hover:text-forest transition-colors">
+            Alerts
           </Link>
-          <Link to="/blog" className="text-white/90 hover:text-white transition-colors">
-            Blog
+          <Link to="/about" className="text-forest/90 hover:text-forest transition-colors">
+            About
           </Link>
         </div>
-        <Button className="bg-mint hover:bg-mint-light text-forest font-medium">
+        <Button className="bg-forest hover:bg-forest/90 text-white font-medium">
           Get started
         </Button>
       </div>

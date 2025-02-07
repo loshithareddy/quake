@@ -33,7 +33,7 @@ const Map = ({ earthquakes }: MapProps) => {
       
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style: "mapbox://styles/mapbox/dark-v11",
+        style: "mapbox://styles/mapbox/light-v11", // Changed to light theme
         center: [0, 0],
         zoom: 2,
       });
@@ -128,7 +128,7 @@ const Map = ({ earthquakes }: MapProps) => {
   }, [earthquakes, isMapInitialized, toast]);
 
   return (
-    <div className="w-full h-full rounded-lg overflow-hidden border border-mint/20">
+    <div className="w-full h-full rounded-lg overflow-hidden border border-forest/20 seismic-card">
       <div ref={mapContainer} className="w-full h-full" />
     </div>
   );
