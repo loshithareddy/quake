@@ -4,7 +4,7 @@ const SOURCES = {
   USGS: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson",
   EMSC: "https://www.seismicportal.eu/fdsnws/event/1/query?format=json&limit=100",
   IMD: "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2024-01-01&limit=100&minlatitude=8.4&maxlatitude=37.6&minlongitude=68.7&maxlongitude=97.25",
-  IRIS: "https://service.iris.edu/fdsnws/event/1/query?format=text&orderby=time&limit=100"
+  IRIS: "https://service.iris.edu/fdsnws/event/1/query?format=text&orderby=time&limit=100&starttime=2024-01-01&minlatitude=8.4&maxlatitude=37.6&minlongitude=68.7&maxlongitude=97.25&minmagnitude=2.5"
 };
 
 async function fetchFromSource(source: string, url: string): Promise<Earthquake[]> {
@@ -49,6 +49,25 @@ async function fetchFromSource(source: string, url: string): Promise<Earthquake[
           depth: feature.geometry.coordinates[2],
           source: "IMD"
         }));
+
+      case "IRIS":
+        // Parse IRIS text format response
+        const lines = data.split('\n');
+        return lines
+          .filter((line: string) => line.trim() && !line.startsWith('#'))
+          .map((line: string, index: number) => {
+            const [time, latitude, longitude, depth, magnitude, , place] = line.split('|').map(s => s.trim());
+            return {
+              id: `iris-${index}`,
+              magnitude: parseFloat(magnitude),
+              place: place || 'Unknown Location',
+              time: new Date(time).getTime(),
+              latitude: parseFloat(latitude),
+              longitude: parseFloat(longitude),
+              depth: parseFloat(depth),
+              source: "IRIS"
+            };
+          });
 
       default:
         return [];
