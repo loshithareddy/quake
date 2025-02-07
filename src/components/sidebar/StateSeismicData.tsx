@@ -24,7 +24,6 @@ const indianStates = [
   { name: "Punjab", riskLevel: "moderate" },
   { name: "Sikkim", riskLevel: "high" },
   { name: "Uttarakhand", riskLevel: "high" },
-  // Adding other states with lower risk levels
   { name: "Chhattisgarh", riskLevel: "low" },
   { name: "Haryana", riskLevel: "low" },
   { name: "Jharkhand", riskLevel: "low" },
