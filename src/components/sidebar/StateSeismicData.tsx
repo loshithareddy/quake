@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Activity } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { Earthquake } from "@/lib/types";
 import SeismicGraph from "../SeismicGraph";
@@ -9,13 +9,48 @@ interface StateSeismicDataProps {
 }
 
 const indianStates = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-  "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand",
-  "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
-  "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan",
-  "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand",
-  "West Bengal", "Delhi"
+  { name: "Andhra Pradesh", riskLevel: "moderate" },
+  { name: "Arunachal Pradesh", riskLevel: "high" },
+  { name: "Assam", riskLevel: "high" },
+  { name: "Bihar", riskLevel: "moderate" },
+  { name: "Gujarat", riskLevel: "high" },
+  { name: "Himachal Pradesh", riskLevel: "high" },
+  { name: "Jammu and Kashmir", riskLevel: "high" },
+  { name: "Maharashtra", riskLevel: "moderate" },
+  { name: "Manipur", riskLevel: "high" },
+  { name: "Meghalaya", riskLevel: "high" },
+  { name: "Mizoram", riskLevel: "high" },
+  { name: "Nagaland", riskLevel: "high" },
+  { name: "Punjab", riskLevel: "moderate" },
+  { name: "Sikkim", riskLevel: "high" },
+  { name: "Uttarakhand", riskLevel: "high" },
+  // Adding other states with lower risk levels
+  { name: "Chhattisgarh", riskLevel: "low" },
+  { name: "Haryana", riskLevel: "low" },
+  { name: "Jharkhand", riskLevel: "low" },
+  { name: "Karnataka", riskLevel: "low" },
+  { name: "Kerala", riskLevel: "low" },
+  { name: "Madhya Pradesh", riskLevel: "low" },
+  { name: "Odisha", riskLevel: "low" },
+  { name: "Rajasthan", riskLevel: "low" },
+  { name: "Tamil Nadu", riskLevel: "low" },
+  { name: "Telangana", riskLevel: "low" },
+  { name: "Tripura", riskLevel: "moderate" },
+  { name: "Uttar Pradesh", riskLevel: "low" },
+  { name: "West Bengal", riskLevel: "low" },
+  { name: "Delhi", riskLevel: "moderate" }
 ];
+
+const getRiskColor = (riskLevel: string) => {
+  switch (riskLevel) {
+    case "high":
+      return "bg-red-500/20 border-red-500/50 text-red-500";
+    case "moderate":
+      return "bg-orange-500/20 border-orange-500/50 text-orange-500";
+    default:
+      return "bg-green-500/20 border-green-500/50 text-green-500";
+  }
+};
 
 export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
   const [selectedState, setSelectedState] = useState("all");
@@ -32,70 +67,65 @@ export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
     : getStateEarthquakes(selectedState);
 
   return (
-    <Collapsible className="border border-mint/20 rounded-lg">
+    <Collapsible className="border border-mint/20 rounded-lg bg-gradient-to-br from-forest-light to-forest">
       <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-mint hover:bg-forest/50">
         <span className="flex items-center">
+          <Activity className="mr-2" />
           State-wise Seismic Activity
         </span>
         <ChevronDown className="h-4 w-4" />
       </CollapsibleTrigger>
-      <CollapsibleContent className="p-4">
-        <select
-          value={selectedState}
-          onChange={(e) => setSelectedState(e.target.value)}
-          className="w-full p-2 mb-4 bg-forest border border-mint/20 rounded text-white"
-        >
-          <option value="all">All States</option>
-          {indianStates.map(state => (
-            <option key={state} value={state}>{state}</option>
-          ))}
-        </select>
+      <CollapsibleContent className="p-4 space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <select
+            value={selectedState}
+            onChange={(e) => setSelectedState(e.target.value)}
+            className="col-span-2 p-2 bg-forest border border-mint/20 rounded-lg text-white hover:border-mint/50 transition-colors"
+          >
+            <option value="all">All States</option>
+            {indianStates.map(state => (
+              <option key={state.name} value={state.name}>{state.name}</option>
+            ))}
+          </select>
+        </div>
 
         <SeismicGraph earthquakes={filteredEarthquakes} />
 
-        {selectedState === "all" ? (
-          indianStates.map(state => {
-            const stateEarthquakes = getStateEarthquakes(state);
-            if (stateEarthquakes.length === 0) return null;
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {indianStates.map(state => {
+            const stateEarthquakes = getStateEarthquakes(state.name);
+            const riskColorClass = getRiskColor(state.riskLevel);
             
             return (
-              <div key={state} className="mb-4">
-                <h3 className="text-mint font-semibold mb-2">{state}</h3>
-                {stateEarthquakes.map(eq => (
-                  <div key={eq.id} className="p-3 mb-2 bg-forest rounded-lg border border-mint/20">
-                    <div className="flex justify-between">
-                      <span className="text-white/80">Magnitude {eq.magnitude}</span>
-                      <span className="text-xs text-mint/60">
-                        {new Date(eq.time).toLocaleDateString()}
-                      </span>
+              <div 
+                key={state.name} 
+                className={`p-4 rounded-lg border ${riskColorClass} transition-all hover:scale-105`}
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="font-semibold">{state.name}</h3>
+                  <span className="text-sm capitalize">{state.riskLevel} Risk</span>
+                </div>
+                <div className="text-sm">
+                  {stateEarthquakes.length > 0 ? (
+                    <div className="space-y-2">
+                      {stateEarthquakes.slice(0, 3).map(eq => (
+                        <div key={eq.id} className="bg-forest/50 p-2 rounded">
+                          <div className="flex justify-between">
+                            <span>M {eq.magnitude}</span>
+                            <span>{new Date(eq.time).toLocaleDateString()}</span>
+                          </div>
+                          <p className="text-xs mt-1 opacity-80">{eq.place}</p>
+                        </div>
+                      ))}
                     </div>
-                    <p className="text-white/80 text-sm">{eq.place}</p>
-                    <div className="text-xs text-mint/60 mt-1">
-                      Source: {eq.source || "USGS"}
-                    </div>
-                  </div>
-                ))}
+                  ) : (
+                    <p className="text-center py-2 opacity-70">No recent activity</p>
+                  )}
+                </div>
               </div>
             );
-          })
-        ) : (
-          <div>
-            {getStateEarthquakes(selectedState).map(eq => (
-              <div key={eq.id} className="p-3 mb-2 bg-forest rounded-lg border border-mint/20">
-                <div className="flex justify-between">
-                  <span className="text-white/80">Magnitude {eq.magnitude}</span>
-                  <span className="text-xs text-mint/60">
-                    {new Date(eq.time).toLocaleDateString()}
-                  </span>
-                </div>
-                <p className="text-white/80 text-sm">{eq.place}</p>
-                <div className="text-xs text-mint/60 mt-1">
-                  Source: {eq.source || "USGS"}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+          })}
+        </div>
       </CollapsibleContent>
     </Collapsible>
   );
