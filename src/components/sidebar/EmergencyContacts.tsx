@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Phone, ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -32,8 +33,8 @@ export const EmergencyContacts = () => {
   ];
 
   return (
-    <Collapsible className="border border-mint/20 rounded-lg">
-      <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-mint hover:bg-forest/50">
+    <Collapsible className="border border-[#2D3748] rounded-lg bg-[#1A1F2C]">
+      <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-indigo-300 hover:bg-[#222935]">
         <span className="flex items-center">
           <Phone className="mr-2" />
           Emergency Contacts
@@ -41,39 +42,39 @@ export const EmergencyContacts = () => {
         <ChevronDown className="h-4 w-4" />
       </CollapsibleTrigger>
       <CollapsibleContent className="p-4">
-        <div className="mb-4 p-3 bg-forest rounded-lg border border-mint/20">
-          <h3 className="text-mint mb-2">Add Custom Contact</h3>
+        <div className="mb-4 p-3 bg-[#222935] rounded-lg border border-[#2D3748]">
+          <h3 className="text-indigo-300 mb-2">Add Custom Contact</h3>
           <input
             type="text"
             placeholder="Contact Name"
             value={newContact.name}
             onChange={(e) => setNewContact(prev => ({ ...prev, name: e.target.value }))}
-            className="w-full mb-2 p-2 bg-transparent border border-mint/20 rounded text-white"
+            className="w-full mb-2 p-2 bg-[#1A1F2C] border border-[#2D3748] rounded text-white"
           />
           <input
             type="text"
             placeholder="Phone Number"
             value={newContact.number}
             onChange={(e) => setNewContact(prev => ({ ...prev, number: e.target.value }))}
-            className="w-full mb-2 p-2 bg-transparent border border-mint/20 rounded text-white"
+            className="w-full mb-2 p-2 bg-[#1A1F2C] border border-[#2D3748] rounded text-white"
           />
           <button
             onClick={handleAddContact}
-            className="w-full p-2 bg-mint text-forest rounded hover:bg-mint/90"
+            className="w-full p-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
           >
             Add Contact
           </button>
         </div>
         {customContacts.map((contact, index) => (
-          <div key={index} className="mb-3 p-3 bg-forest rounded-lg border border-mint/20">
-            <div className="font-semibold text-mint">{contact.name}</div>
-            <div className="text-white/80">{contact.number}</div>
+          <div key={index} className="mb-3 p-3 bg-[#222935] rounded-lg border border-[#2D3748]">
+            <div className="font-semibold text-indigo-300">{contact.name}</div>
+            <div className="text-gray-300">{contact.number}</div>
           </div>
         ))}
         {emergencyContacts.map((contact) => (
-          <div key={contact.name} className="mb-3 p-3 bg-forest rounded-lg border border-mint/20">
-            <div className="font-semibold text-mint">{contact.name}</div>
-            <div className="text-white/80">{contact.number}</div>
+          <div key={contact.name} className="mb-3 p-3 bg-[#222935] rounded-lg border border-[#2D3748]">
+            <div className="font-semibold text-indigo-300">{contact.name}</div>
+            <div className="text-gray-300">{contact.number}</div>
           </div>
         ))}
       </CollapsibleContent>

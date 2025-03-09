@@ -21,14 +21,14 @@ export default {
     extend: {
       colors: {
         forest: {
-          DEFAULT: "#4F46E5", // Indigo as primary color
-          light: "#6366F1", // Slightly lighter indigo
+          DEFAULT: "#1A1F2C", // Dark purple
+          light: "#2D3748", // Slightly lighter dark color
         },
         mint: {
-          DEFAULT: "#E0E7FF", // Light indigo as accent
+          DEFAULT: "#A3BFFA", // Light indigo as accent
         },
         divine: {
-          DEFAULT: "#C7D2FE", // Another indigo variant
+          DEFAULT: "#4C51BF", // Another indigo variant
         }
       },
       fontFamily: {

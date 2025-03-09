@@ -6,56 +6,56 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --background: 222 47% 11%;
+    --foreground: 215 20% 90%;
+    --card: 222 47% 11%;
+    --card-foreground: 215 20% 90%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 215 20% 90%;
     --primary: 246 80% 60%;
     --primary-foreground: 246 80% 98%;
-    --secondary: 246 100% 97%;
-    --secondary-foreground: 246 100% 98%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 246 100% 97%;
-    --accent-foreground: 246 100% 98%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 215 20% 90%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 33% 17%;
+    --accent-foreground: 215 20% 90%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
     --ring: 246 80% 60%;
     --radius: 0.5rem;
   }
 
   body {
-    @apply bg-gradient-to-br from-[#F5F7FA] via-[#E4ECF7] to-[#C3CFE2] text-gray-800 antialiased min-h-screen;
+    @apply bg-gradient-to-br from-[#1A1F2C] via-[#222935] to-[#0D1117] text-gray-200 antialiased min-h-screen;
   }
 
   ::selection {
-    @apply bg-indigo-100 text-indigo-900;
+    @apply bg-indigo-900 text-indigo-100;
   }
 }
 
 .glass-nav {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(26, 31, 44, 0.8);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(224, 231, 255, 0.3);
+  border-bottom: 1px solid rgba(67, 76, 94, 0.3);
 }
 
 .seismic-card {
-  @apply bg-white/80 backdrop-blur-sm border border-indigo-100 rounded-xl p-4 transition-all hover:shadow-lg;
-  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+  @apply bg-[#222935]/80 backdrop-blur-sm border border-[#2D3748] rounded-xl p-4 transition-all hover:shadow-lg;
+  background: linear-gradient(135deg, rgba(34, 41, 53, 0.9), rgba(26, 31, 44, 0.7));
 }
 
 .risk-high {
-  @apply bg-red-50/80 border-red-100;
+  @apply bg-red-950/80 border-red-900;
 }
 
 .risk-moderate {
-  @apply bg-amber-50/80 border-amber-100;
+  @apply bg-amber-950/80 border-amber-900;
 }
 
 .risk-low {
-  @apply bg-green-50/80 border-green-100;
+  @apply bg-green-950/80 border-green-900;
 }
