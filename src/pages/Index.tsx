@@ -27,7 +27,7 @@ const Index = () => {
   }, [error, toast]);
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-forest pt-16">
+    <div className="flex flex-col md:flex-row h-screen bg-gradient-to-br from-[#F5F7FA] via-[#E4ECF7] to-[#C3CFE2] pt-16">
       <Sidebar earthquakes={earthquakes} />
       <main className="flex-1 p-4 overflow-y-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

@@ -8,6 +8,9 @@ import { AuthProvider } from "@/context/AuthContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import EarthquakeDetail from "./pages/EarthquakeDetail";
+import Map from "./pages/Map";
+import Alerts from "./pages/Alerts";
+import About from "./pages/About";
 import Navbar from "./components/Navbar";
 
 const queryClient = new QueryClient();
@@ -24,6 +27,9 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/earthquake/:id" element={<EarthquakeDetail />} />
+            <Route path="/map" element={<Map />} />
+            <Route path="/alerts" element={<Alerts />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

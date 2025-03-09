@@ -30,20 +30,20 @@ const Sidebar = ({ earthquakes }: SidebarProps) => {
   }, []);
 
   return (
-    <aside className="w-full md:w-96 bg-forest-light border-r border-mint/20 p-4 overflow-y-auto">
+    <aside className="w-full md:w-96 bg-indigo-900 border-r border-indigo-800/20 p-4 overflow-y-auto">
       <div className="mb-6 text-center">
-        <Clock className="inline-block mr-2 text-mint" />
-        <span className="text-lg font-semibold text-mint">
+        <Clock className="inline-block mr-2 text-indigo-300" />
+        <span className="text-lg font-semibold text-indigo-100">
           {currentTime.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' })}
         </span>
-        <div className="text-sm text-white/60">India Standard Time</div>
+        <div className="text-sm text-indigo-300/60">India Standard Time</div>
       </div>
 
       {!user && (
-        <div className="mb-4 p-3 bg-forest rounded-lg border border-mint/20">
-          <p className="text-white mb-2">Sign in to receive personalized earthquake alerts</p>
+        <div className="mb-4 p-3 bg-indigo-800 rounded-lg border border-indigo-700/20">
+          <p className="text-indigo-100 mb-2">Sign in to receive personalized earthquake alerts</p>
           <Link to="/auth">
-            <Button variant="outline" className="w-full text-mint border-mint/20 hover:bg-forest-light hover:text-white">
+            <Button variant="outline" className="w-full text-indigo-200 border-indigo-700/20 hover:bg-indigo-700 hover:text-white">
               Sign In / Register
             </Button>
           </Link>

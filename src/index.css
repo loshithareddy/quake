@@ -1,3 +1,4 @@
+
 @import url('https://rsms.me/inter/inter.css');
 @tailwind base;
 @tailwind components;
@@ -11,50 +12,50 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 152 55% 12%;
-    --primary-foreground: 152 55% 98%;
-    --secondary: 152 75% 52%;
-    --secondary-foreground: 152 75% 98%;
+    --primary: 246 80% 60%;
+    --primary-foreground: 246 80% 98%;
+    --secondary: 246 100% 97%;
+    --secondary-foreground: 246 100% 98%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 152 75% 52%;
-    --accent-foreground: 152 75% 98%;
+    --accent: 246 100% 97%;
+    --accent-foreground: 246 100% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 152 75% 52%;
+    --ring: 246 80% 60%;
     --radius: 0.5rem;
   }
 
   body {
-    @apply bg-gradient-to-br from-[#FDE1D3] via-[#E5DEFF] to-[#1EAEDB] text-forest antialiased min-h-screen;
+    @apply bg-gradient-to-br from-[#F5F7FA] via-[#E4ECF7] to-[#C3CFE2] text-gray-800 antialiased min-h-screen;
   }
 
   ::selection {
-    @apply bg-mint text-forest;
+    @apply bg-indigo-100 text-indigo-900;
   }
 }
 
 .glass-nav {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(253, 225, 211, 0.1);
+  border-bottom: 1px solid rgba(224, 231, 255, 0.3);
 }
 
 .seismic-card {
-  @apply bg-white/80 backdrop-blur-sm border border-[#FDE1D3] rounded-xl p-4 transition-all hover:shadow-lg;
+  @apply bg-white/80 backdrop-blur-sm border border-indigo-100 rounded-xl p-4 transition-all hover:shadow-lg;
   background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
 }
 
 .risk-high {
-  @apply bg-[#FDE1D3]/80 border-[#FDE1D3];
+  @apply bg-red-50/80 border-red-100;
 }
 
 .risk-moderate {
-  @apply bg-[#E5DEFF]/80 border-[#1EAEDB];
+  @apply bg-amber-50/80 border-amber-100;
 }
 
 .risk-low {
-  @apply bg-[#E5DEFF]/80 border-[#1EAEDB];
+  @apply bg-green-50/80 border-green-100;
 }

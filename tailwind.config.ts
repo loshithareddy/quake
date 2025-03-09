@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -20,14 +21,14 @@ export default {
     extend: {
       colors: {
         forest: {
-          DEFAULT: "#1EAEDB", // Brighter, more vibrant blue
-          light: "#0FA0CE", // Slightly darker blue for contrast
+          DEFAULT: "#4F46E5", // Indigo as primary color
+          light: "#6366F1", // Slightly lighter indigo
         },
         mint: {
-          DEFAULT: "#FDE1D3", // Soft peach color
+          DEFAULT: "#E0E7FF", // Light indigo as accent
         },
         divine: {
-          DEFAULT: "#E5DEFF", // Soft purple for accent
+          DEFAULT: "#C7D2FE", // Another indigo variant
         }
       },
       fontFamily: {
