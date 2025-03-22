@@ -21,14 +21,14 @@ export default {
     extend: {
       colors: {
         forest: {
-          DEFAULT: "#0F0F0F", // Near black
-          light: "#1A1A1A", // Slightly lighter black
+          DEFAULT: "#403E43", // Charcoal gray
+          light: "#8A898C", // Medium gray
         },
         mint: {
-          DEFAULT: "#CCCCCC", // Light gray as accent
+          DEFAULT: "#D3E4FD", // Soft blue
         },
         divine: {
-          DEFAULT: "#333333", // Dark gray variant
+          DEFAULT: "#9F9EA1", // Silver gray
         }
       },
       fontFamily: {

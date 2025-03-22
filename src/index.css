@@ -6,56 +6,56 @@
 
 @layer base {
   :root {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 90%;
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 90%;
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 90%;
-    --primary: 0 0% 20%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 90%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 0 0% 10%;
-    --accent-foreground: 0 0% 90%;
-    --destructive: 0 84.2% 60.2%;
+    --background: 220 33% 98%;
+    --foreground: 220 13% 18%;
+    --card: 220 33% 98%;
+    --card-foreground: 220 13% 18%;
+    --popover: 220 33% 98%;
+    --popover-foreground: 220 13% 18%;
+    --primary: 220 13% 28%;
+    --primary-foreground: 220 33% 98%;
+    --secondary: 220 13% 94%;
+    --secondary-foreground: 220 13% 18%;
+    --muted: 220 13% 94%;
+    --muted-foreground: 220 13% 45%;
+    --accent: 220 13% 94%;
+    --accent-foreground: 220 13% 18%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 0 0% 30%;
+    --border: 220 13% 86%;
+    --input: 220 13% 86%;
+    --ring: 220 13% 48%;
     --radius: 0.5rem;
   }
 
   body {
-    @apply bg-gradient-to-br from-[#0F0F0F] via-[#151515] to-[#000000] text-gray-200 antialiased min-h-screen;
+    @apply bg-gradient-to-br from-[#F6F6F7] via-[#F1F1F1] to-[#E5E5E6] text-gray-700 antialiased min-h-screen;
   }
 
   ::selection {
-    @apply bg-gray-900 text-gray-100;
+    @apply bg-gray-200 text-gray-700;
   }
 }
 
 .glass-nav {
-  background: rgba(10, 10, 10, 0.8);
+  background: rgba(246, 246, 247, 0.8);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(40, 40, 40, 0.3);
+  border-bottom: 1px solid rgba(200, 200, 200, 0.3);
 }
 
 .seismic-card {
-  @apply bg-[#151515]/80 backdrop-blur-sm border border-[#222222] rounded-xl p-4 transition-all hover:shadow-lg;
-  background: linear-gradient(135deg, rgba(21, 21, 21, 0.9), rgba(15, 15, 15, 0.7));
+  @apply bg-[#F6F6F7]/80 backdrop-blur-sm border border-[#E5E5E6] rounded-xl p-4 transition-all hover:shadow-lg;
+  background: linear-gradient(135deg, rgba(246, 246, 247, 0.9), rgba(241, 241, 241, 0.7));
 }
 
 .risk-high {
-  @apply bg-red-950/80 border-red-900;
+  @apply bg-red-100/80 border-red-200;
 }
 
 .risk-moderate {
-  @apply bg-amber-950/80 border-amber-900;
+  @apply bg-amber-100/80 border-amber-200;
 }
 
 .risk-low {
-  @apply bg-green-950/80 border-green-900;
+  @apply bg-green-100/80 border-green-200;
 }

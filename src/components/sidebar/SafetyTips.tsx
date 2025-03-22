@@ -1,3 +1,4 @@
+
 import { ChevronDown, Shield } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -11,8 +12,8 @@ const safetyTips = [
 
 export const SafetyTips = () => {
   return (
-    <Collapsible className="border border-mint/20 rounded-lg">
-      <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-mint hover:bg-forest/50">
+    <Collapsible className="border border-gray-300 rounded-lg shadow-sm">
+      <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-gray-700 hover:bg-gray-100">
         <span className="flex items-center">
           <Shield className="mr-2" />
           Safety Tips
@@ -21,8 +22,8 @@ export const SafetyTips = () => {
       </CollapsibleTrigger>
       <CollapsibleContent className="p-4">
         {safetyTips.map((tip, index) => (
-          <div key={index} className="mb-3 p-3 bg-forest rounded-lg border border-mint/20">
-            <p className="text-white/80">{tip}</p>
+          <div key={index} className="mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <p className="text-gray-700">{tip}</p>
           </div>
         ))}
       </CollapsibleContent>

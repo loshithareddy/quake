@@ -51,8 +51,8 @@ const AlertNotifications = () => {
   ];
 
   return (
-    <div className="border border-gray-800/20 rounded-lg">
-      <div className="flex items-center justify-between p-4 text-gray-300 hover:bg-black/50">
+    <div className="border border-gray-300 rounded-lg shadow-sm">
+      <div className="flex items-center justify-between p-4 text-gray-700 hover:bg-gray-100">
         <span className="flex items-center">
           <Bell className="mr-2" />
           Alert Notifications
@@ -62,7 +62,7 @@ const AlertNotifications = () => {
             variant="outline" 
             size="sm" 
             onClick={() => setIsDialogOpen(true)}
-            className="text-gray-300 border-gray-800/20 hover:bg-gray-900 hover:text-white"
+            className="text-gray-700 border-gray-300 hover:bg-gray-200 hover:text-gray-800"
           >
             <Settings className="h-4 w-4 mr-1" />
             Configure
@@ -70,13 +70,13 @@ const AlertNotifications = () => {
         </div>
       </div>
 
-      <div className="p-4 border-t border-gray-800/20">
-        <div className="p-3 bg-black rounded-lg border border-gray-800/20 mb-4">
+      <div className="p-4 border-t border-gray-300">
+        <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 mb-4">
           <div className="flex items-start mb-2">
-            <AlertTriangle className="h-5 w-5 text-gray-400 mr-2 mt-0.5" />
+            <AlertTriangle className="h-5 w-5 text-gray-500 mr-2 mt-0.5" />
             <div>
-              <h3 className="font-medium text-gray-300">Earthquake Alerts Active</h3>
-              <p className="text-white/80 text-sm">
+              <h3 className="font-medium text-gray-700">Earthquake Alerts Active</h3>
+              <p className="text-gray-600 text-sm">
                 You will be notified about earthquakes of magnitude {alertSettings.minMagnitude}+ in your region.
               </p>
             </div>
@@ -87,23 +87,23 @@ const AlertNotifications = () => {
             </span>
             <Switch 
               checked={true} 
-              className="data-[state=checked]:bg-gray-700 data-[state=checked]:text-white"
+              className="data-[state=checked]:bg-gray-400 data-[state=checked]:text-white"
               disabled
             />
           </div>
         </div>
 
-        <h3 className="font-medium text-gray-300 mb-2">Recent Alerts</h3>
+        <h3 className="font-medium text-gray-700 mb-2">Recent Alerts</h3>
         <div className="space-y-2">
           {recentAlerts.map((alert) => (
-            <div key={alert.id} className="p-2 bg-black rounded-lg border border-gray-800/20">
+            <div key={alert.id} className="p-2 bg-gray-50 rounded-lg border border-gray-200">
               <div className="flex justify-between items-center">
-                <span className="font-medium text-white">M{alert.magnitude} Earthquake</span>
+                <span className="font-medium text-gray-700">M{alert.magnitude} Earthquake</span>
                 <span className="text-xs text-gray-500">{alert.date}</span>
               </div>
-              <p className="text-sm text-white/80">{alert.location}</p>
+              <p className="text-sm text-gray-600">{alert.location}</p>
               <div className="flex justify-end mt-1">
-                <span className="text-xs px-2 py-0.5 bg-gray-800/20 rounded-full text-gray-400">
+                <span className="text-xs px-2 py-0.5 bg-gray-200 rounded-full text-gray-600">
                   {alert.status}
                 </span>
               </div>
@@ -115,15 +115,15 @@ const AlertNotifications = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-black">Configure Earthquake Alerts</DialogTitle>
+            <DialogTitle className="text-gray-800">Configure Earthquake Alerts</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-6 py-4">
             <div className="space-y-4">
-              <h3 className="font-medium text-black">Notification Methods</h3>
+              <h3 className="font-medium text-gray-800">Notification Methods</h3>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Info className="h-4 w-4 text-black mr-2" />
+                  <Info className="h-4 w-4 text-gray-700 mr-2" />
                   <span>SMS Alerts</span>
                 </div>
                 <Switch 
@@ -135,7 +135,7 @@ const AlertNotifications = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Info className="h-4 w-4 text-black mr-2" />
+                  <Info className="h-4 w-4 text-gray-700 mr-2" />
                   <span>Email Notifications</span>
                 </div>
                 <Switch 
@@ -147,7 +147,7 @@ const AlertNotifications = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Info className="h-4 w-4 text-black mr-2" />
+                  <Info className="h-4 w-4 text-gray-700 mr-2" />
                   <span>In-App Notifications</span>
                 </div>
                 <Switch 
@@ -160,7 +160,7 @@ const AlertNotifications = () => {
             </div>
 
             <div className="space-y-4">
-              <h3 className="font-medium text-forest">Alert Criteria</h3>
+              <h3 className="font-medium text-gray-800">Alert Criteria</h3>
               <div className="space-y-2">
                 <label className="block text-sm">Minimum Magnitude</label>
                 <select 
@@ -196,7 +196,7 @@ const AlertNotifications = () => {
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
               Cancel
             </Button>
-            <Button className="bg-black text-white" onClick={handleSaveSettings}>
+            <Button className="bg-gray-700 text-white hover:bg-gray-800" onClick={handleSaveSettings}>
               Save Changes
             </Button>
           </DialogFooter>
