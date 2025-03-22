@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Star, Award, ShieldCheck } from "lucide-react";
 
@@ -31,10 +32,10 @@ const Features = () => {
           ].map((feature, index) => (
             <div 
               key={index} 
-              className="bg-forest-light p-8 rounded-xl border border-mint/10"
+              className="bg-forest-light p-8 rounded-xl border border-[#0A4D92]/20"
             >
-              <div className="w-12 h-12 bg-mint rounded-full flex items-center justify-center mb-6">
-                {React.createElement(feature.icon, { className: "w-6 h-6 text-forest" })}
+              <div className="w-12 h-12 bg-[#0A4D92] rounded-full flex items-center justify-center mb-6">
+                {React.createElement(feature.icon, { className: "w-6 h-6 text-white" })}
               </div>
               <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
               <p className="text-white/80">{feature.description}</p>

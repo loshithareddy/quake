@@ -12,19 +12,19 @@
     --card-foreground: 220 13% 18%;
     --popover: 220 33% 98%;
     --popover-foreground: 220 13% 18%;
-    --primary: 220 13% 28%;
+    --primary: 214 83% 30%; /* Changed to dark blue (0A4D92) */
     --primary-foreground: 220 33% 98%;
-    --secondary: 220 13% 94%;
+    --secondary: 214 83% 95%; /* Lighter shade of dark blue */
     --secondary-foreground: 220 13% 18%;
     --muted: 220 13% 94%;
     --muted-foreground: 220 13% 45%;
-    --accent: 220 13% 94%;
+    --accent: 214 83% 90%; /* Accent based on dark blue */
     --accent-foreground: 220 13% 18%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
     --border: 220 13% 86%;
     --input: 220 13% 86%;
-    --ring: 220 13% 48%;
+    --ring: 214 83% 40%; /* Ring color based on dark blue */
     --radius: 0.5rem;
   }
 

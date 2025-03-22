@@ -25,7 +25,7 @@ export default {
           light: "#8A898C", // Medium gray
         },
         mint: {
-          DEFAULT: "#D3E4FD", // Soft blue
+          DEFAULT: "#0A4D92", // Dark blue (was #D3E4FD - Soft blue)
         },
         divine: {
           DEFAULT: "#9F9EA1", // Silver gray
