@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -147,6 +146,9 @@ const Auth = () => {
                   )}
                 />
               </div>
+              <p className="text-xs text-center text-gray-500 mb-2">
+                A dot (•) indicates an empty slot. Typed numbers will appear in filled boxes.
+              </p>
               <div className="flex justify-between text-xs">
                 <button
                   type="button"
