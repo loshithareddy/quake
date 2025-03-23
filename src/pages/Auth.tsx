@@ -4,11 +4,13 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Navigate } from "react-router-dom";
-import { AlertTriangle, Shield, Smartphone } from "lucide-react";
+import { AlertTriangle, Shield, Smartphone, User } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { Label } from "@/components/ui/label";
 
 const Auth = () => {
   const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const { user, isLoading, sendOTP, verifyOTP } = useAuth();
@@ -22,20 +24,26 @@ const Auth = () => {
       return;
     }
     
-    await sendOTP(phone);
+    // Simple name validation
+    if (name.trim().length < 2) {
+      alert("Please enter your name");
+      return;
+    }
+    
+    await sendOTP(phone, name);
     setOtpSent(true);
   };
 
   const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
-    await verifyOTP(phone, otp);
+    await verifyOTP(phone, otp, name);
   };
 
   const handleResendOTP = async () => {
-    await sendOTP(phone);
+    await sendOTP(phone, name);
   };
 
-  const handleChangePhone = () => {
+  const handleChangePhoneAndName = () => {
     setOtpSent(false);
     setOtp("");
   };
@@ -55,19 +63,40 @@ const Auth = () => {
           <p className="mt-2 text-sm text-gray-600">
             {otpSent 
               ? "Enter the verification code sent to your phone"
-              : "Sign in with your phone number to access earthquake alerts"}
+              : "Sign in with your name and phone number to access earthquake alerts"}
           </p>
         </div>
 
         {!otpSent ? (
           <form onSubmit={handleSendOTP} className="mt-8 space-y-6">
             <div>
-              <label
+              <Label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Your Name
+              </Label>
+              <div className="mt-1 flex items-center">
+                <User className="h-5 w-5 text-gray-400 mr-2" />
+                <Input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="flex-1"
+                  placeholder="John Doe"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <Label
                 htmlFor="phone"
                 className="block text-sm font-medium text-gray-700"
               >
                 Phone Number
-              </label>
+              </Label>
               <div className="mt-1 flex items-center">
                 <Smartphone className="h-5 w-5 text-gray-400 mr-2" />
                 <Input
@@ -98,12 +127,12 @@ const Auth = () => {
         ) : (
           <form onSubmit={handleVerifyOTP} className="mt-8 space-y-6">
             <div>
-              <label
+              <Label
                 htmlFor="otp"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
                 Verification Code
-              </label>
+              </Label>
               <div className="flex justify-center mb-4">
                 <InputOTP
                   maxLength={6}
@@ -121,10 +150,10 @@ const Auth = () => {
               <div className="flex justify-between text-xs">
                 <button
                   type="button"
-                  onClick={handleChangePhone}
+                  onClick={handleChangePhoneAndName}
                   className="text-forest hover:underline"
                 >
-                  Change phone number
+                  Change information
                 </button>
                 <button
                   type="button"

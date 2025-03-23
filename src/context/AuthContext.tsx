@@ -12,8 +12,8 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  sendOTP: (phone: string) => Promise<void>;
-  verifyOTP: (phone: string, otp: string) => Promise<void>;
+  sendOTP: (phone: string, name: string) => Promise<void>;
+  verifyOTP: (phone: string, otp: string, name: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -24,8 +24,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  // Mock function to send OTP
-  const sendOTP = async (phone: string) => {
+  // Modified function to send OTP with name
+  const sendOTP = async (phone: string, name: string) => {
     setIsLoading(true);
     try {
       // Mocking OTP sending for demo purposes
@@ -50,8 +50,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Mock function to verify OTP
-  const verifyOTP = async (phone: string, otp: string) => {
+  // Modified function to verify OTP with name
+  const verifyOTP = async (phone: string, otp: string, name: string) => {
     setIsLoading(true);
     try {
       // Mocking OTP verification for demo purposes
@@ -65,17 +65,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Set user information after successful verification
       setUser({
         id: "user123",
-        name: "User", // We don't collect name in this flow
+        name, // Now we're using the provided name
         phone,
         email: "", // Adding empty email since we don't collect it in the OTP flow
       });
       
       toast({
         title: "Verification successful",
-        description: "You are now logged in",
+        description: `Welcome, ${name}! You are now logged in.`,
       });
       
       localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userName", name);
     } catch (error) {
       toast({
         title: "Verification failed",
@@ -90,6 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser(null);
     localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userName");
     toast({
       title: "Logged out",
       description: "You have been logged out",
