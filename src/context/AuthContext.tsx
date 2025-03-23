@@ -6,6 +6,7 @@ interface User {
   id: string;
   name: string;
   phone: string;
+  email?: string; // Added email as an optional property
 }
 
 interface AuthContextType {
@@ -66,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: "user123",
         name: "User", // We don't collect name in this flow
         phone,
+        email: "", // Adding empty email since we don't collect it in the OTP flow
       });
       
       toast({

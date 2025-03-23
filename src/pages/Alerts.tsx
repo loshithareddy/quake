@@ -12,7 +12,7 @@ const Alerts = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [email, setEmail] = useState(user?.email || "");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(user?.phone || "");
   const [location, setLocation] = useState("");
   const [alertTypes, setAlertTypes] = useState({
     immediate: true,
