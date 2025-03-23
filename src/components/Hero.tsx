@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star } from "lucide-react";
 
@@ -9,7 +8,7 @@ const Hero = () => {
         <div className="space-y-8">
           <div className="flex items-center gap-2 seismic-card">
             <Star className="w-4 h-4 text-forest" />
-            <span className="text-forest text-sm font-medium">Seismic Activity Monitor</span>
+            <span className="text-forest text-sm font-medium">QuakeAlert Activity Monitor</span>
           </div>
           <h1 className="text-5xl md:text-7xl font-bold leading-tight text-forest">
             Track

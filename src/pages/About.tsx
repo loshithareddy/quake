@@ -1,4 +1,3 @@
-
 import { CircleUser, Cpu, Mail, MapPin, Phone, Shield, Clock, Globe } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -7,13 +6,13 @@ const About = () => {
     <div className="pt-16 min-h-screen bg-gradient-to-br from-[#1A1F2C] via-[#222935] to-[#0D1117]">
       <div className="container mx-auto p-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold text-indigo-300 mb-2">About TerraAlert</h1>
+          <h1 className="text-4xl font-bold text-indigo-300 mb-2">About QuakeAlert</h1>
           <p className="text-indigo-400 mb-8">Real-time earthquake monitoring for India</p>
           
           <div className="bg-[#222935]/80 rounded-xl shadow-lg p-6 mb-8 border border-[#2D3748]">
             <h2 className="text-2xl font-semibold text-indigo-300 mb-4">Our Mission</h2>
             <p className="text-gray-300 mb-4">
-              TerraAlert is dedicated to providing accurate, real-time earthquake information to the people of India. 
+              QuakeAlert is dedicated to providing accurate, real-time earthquake information to the people of India. 
               Our platform integrates data from multiple seismic monitoring sources to deliver timely alerts and 
               comprehensive analysis of seismic activity across the region.
             </p>
@@ -51,7 +50,7 @@ const About = () => {
                   How We Help
                 </CardTitle>
                 <CardDescription className="text-gray-400">
-                  Services provided by TerraAlert
+                  Services provided by QuakeAlert
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-2 text-gray-300">
@@ -116,7 +115,7 @@ const About = () => {
                 <Mail className="mt-1 mr-3 h-5 w-5 text-indigo-400 flex-shrink-0" />
                 <div>
                   <h3 className="text-lg font-medium text-indigo-300">Email</h3>
-                  <p className="text-gray-300">info@terraalert.in</p>
+                  <p className="text-gray-300">info@quakealert.in</p>
                 </div>
               </div>
               <div className="flex items-start">
