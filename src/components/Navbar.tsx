@@ -55,7 +55,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             <div className="text-indigo-700">
               <User className="inline-block mr-1" size={16} />
-              {user.name}
+              {user.phone}
             </div>
             <Button 
               onClick={logout}
