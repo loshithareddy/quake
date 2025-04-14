@@ -1,32 +1,27 @@
+
+import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { History } from "lucide-react";
-
-const recentEvents = [
-  {
-    name: "2024 Hindu Kush Earthquake",
-    magnitude: "6.4",
-    description: "Affected parts of Afghanistan and Northern India",
-    source: "USGS",
-    date: "2024-01-11"
-  },
-  {
-    name: "2023 Nepal-India Border Earthquake",
-    magnitude: "6.2",
-    description: "Felt across Nepal and Northern India",
-    source: "NCS",
-    date: "2023-10-03"
-  },
-  {
-    name: "2023 Gujarat Earthquake",
-    magnitude: "4.8",
-    description: "Epicenter in Kutch region",
-    source: "IMD",
-    date: "2023-07-16"
-  }
-];
+import type { Earthquake } from "@/lib/types";
+import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { fetchEarthquakes } from "@/lib/api";
 
 export const RecentEvents = () => {
+  const { data: earthquakes } = useQuery({
+    queryKey: ["earthquakes"],
+    queryFn: fetchEarthquakes,
+    refetchInterval: 180000, // Refetch every 3 minutes
+  });
+
+  // Get the 5 most recent earthquakes
+  const recentEarthquakes = earthquakes 
+    ? [...earthquakes]
+      .sort((a, b) => b.time - a.time)
+      .slice(0, 5)
+    : [];
+
   return (
     <Collapsible className="border border-mint/20 rounded-lg">
       <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-mint hover:bg-forest/50">
@@ -38,17 +33,31 @@ export const RecentEvents = () => {
       </CollapsibleTrigger>
       <CollapsibleContent className="p-4">
         <div className="space-y-3">
-          {recentEvents.map((event, index) => (
-            <div key={index} className="p-3 bg-forest rounded-lg border border-mint/20">
-              <div className="font-semibold text-mint">{event.name}</div>
-              <div className="text-white/80">Magnitude {event.magnitude}</div>
-              <p className="text-white/80">{event.description}</p>
-              <div className="flex justify-between mt-1">
-                <span className="text-xs text-mint/60">Source: {event.source}</span>
-                <span className="text-xs text-mint/60">Date: {event.date}</span>
+          {recentEarthquakes.length > 0 ? (
+            recentEarthquakes.map((eq) => (
+              <div key={eq.id} className="p-3 bg-forest rounded-lg border border-mint/20">
+                <div className="font-semibold text-mint">
+                  {eq.magnitude >= 5 
+                    ? `Significant Earthquake (M${eq.magnitude.toFixed(1)})` 
+                    : `M${eq.magnitude.toFixed(1)} Earthquake`}
+                </div>
+                <div className="text-white/80">{eq.place}</div>
+                <p className="text-white/80">
+                  Depth: {eq.depth}km
+                </p>
+                <div className="flex justify-between mt-1">
+                  <span className="text-xs text-mint/60">Source: {eq.source || "USGS"}</span>
+                  <span className="text-xs text-mint/60">
+                    {format(new Date(eq.time), "dd MMM yyyy, HH:mm")}
+                  </span>
+                </div>
               </div>
+            ))
+          ) : (
+            <div className="p-3 bg-forest rounded-lg border border-mint/20 text-center">
+              <p className="text-white/80">Loading recent earthquakes...</p>
             </div>
-          ))}
+          )}
         </div>
       </CollapsibleContent>
     </Collapsible>
