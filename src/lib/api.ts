@@ -1,4 +1,3 @@
-
 import type { Earthquake } from "./types";
 
 // Get current date for API requests
@@ -10,7 +9,8 @@ const getCurrentDate = () => {
 const SOURCES = {
   USGS: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson",
   EMSC: "https://www.seismicportal.eu/fdsnws/event/1/query?format=json&limit=100",
-  IMD: `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${getCurrentDate()}&limit=100&minlatitude=8.4&maxlatitude=37.6&minlongitude=68.7&maxlongitude=97.25`
+  IMD: `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${getCurrentDate()}&limit=100&minlatitude=8.4&maxlatitude=37.6&minlongitude=68.7&maxlongitude=97.25`,
+  THAILAND: `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${getCurrentDate()}&limit=100&minlatitude=5&maxlatitude=20&minlongitude=98&maxlongitude=105`
 };
 
 async function fetchFromSource(source: string, url: string): Promise<Earthquake[]> {
@@ -63,6 +63,18 @@ async function fetchFromSource(source: string, url: string): Promise<Earthquake[
           longitude: feature.geometry.coordinates[0],
           depth: feature.geometry.coordinates[2],
           source: "IMD"
+        }));
+      
+      case "THAILAND":
+        return data.features.map((feature: any) => ({
+          id: feature.id,
+          magnitude: feature.properties.mag,
+          place: feature.properties.place,
+          time: feature.properties.time,
+          latitude: feature.geometry.coordinates[1],
+          longitude: feature.geometry.coordinates[0],
+          depth: feature.geometry.coordinates[2],
+          source: "THAILAND"
         }));
 
       default:

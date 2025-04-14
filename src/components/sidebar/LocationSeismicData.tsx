@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { AlertTriangle, ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -16,11 +17,20 @@ export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) =
   const [lastMagnitude, setLastMagnitude] = useState<number | null>(null);
   const { toast } = useToast();
   
-  const sources = ["all", "IMD", "NCS", "USGS", "EMSC", "IRIS"];
+  const sources = ["all", "IMD", "NCS", "USGS", "EMSC", "IRIS", "Thailand"];
   
   const filteredEarthquakes = earthquakes?.filter(eq => {
-    const locationMatch = eq.place?.toLowerCase().includes(selectedLocation.toLowerCase());
-    const sourceMatch = selectedSource === "all" || eq.source === selectedSource;
+    const isThailandLocation = eq.place?.toLowerCase().includes("thailand") || 
+      (eq.latitude >= 5 && eq.latitude <= 20 && eq.longitude >= 98 && eq.longitude <= 105);
+    
+    const locationMatch = selectedLocation === "" || 
+      eq.place?.toLowerCase().includes(selectedLocation.toLowerCase()) ||
+      (selectedLocation.toLowerCase() === "thailand" && isThailandLocation);
+    
+    const sourceMatch = selectedSource === "all" || 
+      eq.source === selectedSource || 
+      (selectedSource === "Thailand" && isThailandLocation);
+    
     return locationMatch && sourceMatch;
   });
 
@@ -51,7 +61,7 @@ export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) =
       <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-mint hover:bg-forest/50">
         <span className="flex items-center">
           <AlertTriangle className="mr-2" />
-          Seismic Activity in India
+          Seismic Activity in Thailand and Nearby Regions
         </span>
         <ChevronDown className="h-4 w-4" />
       </CollapsibleTrigger>
