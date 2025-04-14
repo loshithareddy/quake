@@ -1,10 +1,16 @@
 
 import type { Earthquake } from "./types";
 
+// Get current date for API requests
+const getCurrentDate = () => {
+  const date = new Date();
+  return date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+};
+
 const SOURCES = {
   USGS: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson",
   EMSC: "https://www.seismicportal.eu/fdsnws/event/1/query?format=json&limit=100",
-  IMD: "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2024-01-01&limit=100&minlatitude=8.4&maxlatitude=37.6&minlongitude=68.7&maxlongitude=97.25"
+  IMD: `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${getCurrentDate()}&limit=100&minlatitude=8.4&maxlatitude=37.6&minlongitude=68.7&maxlongitude=97.25`
 };
 
 async function fetchFromSource(source: string, url: string): Promise<Earthquake[]> {

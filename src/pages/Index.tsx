@@ -19,7 +19,7 @@ const Index = () => {
   const { data: earthquakes, error, refetch } = useQuery({
     queryKey: ["earthquakes"],
     queryFn: fetchEarthquakes,
-    refetchInterval: 300000, // Refetch every 5 minutes
+    refetchInterval: 180000, // Refetch every 3 minutes (reduced from 5)
   });
 
   // Handle automatic refetching and update time
@@ -27,7 +27,7 @@ const Index = () => {
     const updateInterval = setInterval(() => {
       refetch();
       setLastUpdate(new Date());
-    }, 300000); // 5 minutes
+    }, 180000); // 3 minutes (reduced from 5)
     
     return () => clearInterval(updateInterval);
   }, [refetch]);
@@ -38,7 +38,7 @@ const Index = () => {
     setLastUpdate(new Date());
     toast({
       title: "Data refreshed",
-      description: "Earthquake data has been updated.",
+      description: "Earthquake data has been updated to the latest information.",
     });
   };
 
