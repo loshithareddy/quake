@@ -1,12 +1,20 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Bell, BellOff, Clock, MapPin, Settings, MessageSquareWarning } from "lucide-react";
+import { 
+  Bell, BellOff, Clock, MapPin, Settings, 
+  MessageSquareWarning, RefreshCw, AlertTriangle,
+  Info, Activity
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { useQuery } from "@tanstack/react-query";
+import { fetchEarthquakes } from "@/lib/api";
+import { format } from "date-fns";
+import type { Earthquake } from "@/lib/types";
 
 const Alerts = () => {
   const { toast } = useToast();
@@ -14,6 +22,16 @@ const Alerts = () => {
   const [email, setEmail] = useState(user?.email || "");
   const [phone, setPhone] = useState(user?.phone || "");
   const [location, setLocation] = useState("");
+  const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
+  const [recentAlerts, setRecentAlerts] = useState<{ 
+    id: string; 
+    title: string; 
+    magnitude: number; 
+    place: string; 
+    time: number; 
+    severity: 'low' | 'medium' | 'high' 
+  }[]>([]);
+  
   const [alertTypes, setAlertTypes] = useState({
     immediate: true,
     daily: false,
@@ -22,17 +40,120 @@ const Alerts = () => {
     all: false,
   });
 
+  const { data: earthquakes, refetch, isLoading } = useQuery({
+    queryKey: ["earthquakes-alerts"],
+    queryFn: fetchEarthquakes,
+    refetchInterval: 60000,
+  });
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      refetch();
+      setLastUpdateTime(new Date());
+    }, 60000);
+    
+    return () => clearInterval(intervalId);
+  }, [refetch]);
+  
+  useEffect(() => {
+    if (!earthquakes || !alertTypes.immediate) return;
+    
+    const sixHoursAgo = Date.now() - 6 * 60 * 60 * 1000;
+    const significantQuakes = earthquakes.filter(eq => {
+      const isRecent = eq.time > sixHoursAgo;
+      const hasMagnitude = alertTypes.all ? 
+        eq.magnitude >= 2.5 : 
+        eq.magnitude >= 4.5;
+        
+      return isRecent && hasMagnitude;
+    });
+    
+    const newAlerts = significantQuakes.map(eq => ({
+      id: eq.id,
+      title: `M${eq.magnitude.toFixed(1)} Earthquake Detected`,
+      magnitude: eq.magnitude,
+      place: eq.place,
+      time: eq.time,
+      severity: 
+        eq.magnitude >= 5.0 ? 'high' as const : 
+        eq.magnitude >= 4.0 ? 'medium' as const : 
+        'low' as const
+    }));
+    
+    if (newAlerts.length > 0) {
+      const existingIds = new Set(recentAlerts.map(alert => alert.id));
+      const filteredNewAlerts = newAlerts
+        .filter(alert => !existingIds.has(alert.id))
+        .slice(0, 5);
+      
+      if (filteredNewAlerts.length > 0) {
+        setRecentAlerts(prevAlerts => 
+          [...filteredNewAlerts, ...prevAlerts].slice(0, 10)
+        );
+        
+        const mostSignificantAlert = filteredNewAlerts.sort((a, b) => b.magnitude - a.magnitude)[0];
+        if (mostSignificantAlert && alertTypes.immediate) {
+          toast({
+            title: mostSignificantAlert.title,
+            description: `${mostSignificantAlert.place} at ${format(new Date(mostSignificantAlert.time), "h:mm a")}`,
+            variant: mostSignificantAlert.severity === 'high' ? "destructive" : "default",
+          });
+        }
+      }
+    }
+  }, [earthquakes, alertTypes.immediate, alertTypes.all, toast]);
+
   const handleSaveSettings = () => {
     toast({
       title: "Alert settings saved",
       description: "Your earthquake alert preferences have been updated.",
     });
   };
+  
+  const handleManualRefresh = () => {
+    refetch();
+    setLastUpdateTime(new Date());
+    toast({
+      title: "Alert data refreshed",
+      description: "Earthquake data has been updated to the latest information.",
+    });
+  };
+
+  const getTotalActiveAlerts = () => {
+    const lastDay = Date.now() - 24 * 60 * 60 * 1000;
+    return earthquakes?.filter(eq => 
+      eq.time > lastDay && 
+      (alertTypes.all ? eq.magnitude >= 2.5 : eq.magnitude >= 4.5)
+    ).length || 0;
+  };
 
   return (
     <div className="pt-16 min-h-screen bg-gradient-to-br from-[#F5F7FA] via-[#E4ECF7] to-[#C3CFE2]">
       <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold text-indigo-900 mb-6">Earthquake Alerts</h1>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-indigo-900">Earthquake Alerts</h1>
+            <p className="text-sm text-gray-500">
+              Last updated: {format(lastUpdateTime, "MMM d, h:mm:ss a")}
+            </p>
+          </div>
+          <Button
+            onClick={handleManualRefresh}
+            className="mt-2 md:mt-0 bg-indigo-600 hover:bg-indigo-700 text-white"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" /> Refresh Data
+          </Button>
+        </div>
+        
+        {!user && (
+          <Alert className="mb-6">
+            <Info className="h-4 w-4" />
+            <AlertTitle>Sign in to get personalized alerts</AlertTitle>
+            <AlertDescription>
+              Create an account to receive customized earthquake alerts based on your location and preferences.
+            </AlertDescription>
+          </Alert>
+        )}
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="col-span-2">
@@ -126,7 +247,7 @@ const Alerts = () => {
                       <label className="text-sm text-gray-700">Significant earthquakes only (M 4.5+)</label>
                       <Switch 
                         checked={alertTypes.significant}
-                        onCheckedChange={(checked) => setAlertTypes({...alertTypes, significant: checked})}
+                        onCheckedChange={(checked) => setAlertTypes({...alertTypes, significant: checked, all: !checked})}
                       />
                     </div>
                     
@@ -134,7 +255,7 @@ const Alerts = () => {
                       <label className="text-sm text-gray-700">All detected earthquakes</label>
                       <Switch 
                         checked={alertTypes.all}
-                        onCheckedChange={(checked) => setAlertTypes({...alertTypes, all: checked})}
+                        onCheckedChange={(checked) => setAlertTypes({...alertTypes, all: checked, significant: !checked})}
                       />
                     </div>
                   </div>
@@ -181,6 +302,12 @@ const Alerts = () => {
                   <p className="text-xs mt-1 text-gray-500">
                     {location ? `Monitoring: ${location}` : 'No specific location set'}
                   </p>
+                  {alertTypes.immediate && (
+                    <div className="mt-2 text-xs text-green-700">
+                      <Activity className="inline-block h-3 w-3 mr-1" />
+                      {isLoading ? 'Updating...' : `${getTotalActiveAlerts()} active alerts in last 24h`}
+                    </div>
+                  )}
                 </div>
                 
                 <div className="mt-4 space-y-2">
@@ -214,12 +341,46 @@ const Alerts = () => {
             <Card className="mt-6">
               <CardHeader>
                 <CardTitle className="text-sm font-medium">Recent Alerts</CardTitle>
+                <CardDescription>Real-time earthquake notifications</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-6 text-gray-500">
-                  <MessageSquareWarning className="h-12 w-12 mx-auto mb-2 text-gray-300" />
-                  <p className="text-sm">No recent alerts</p>
-                </div>
+                {recentAlerts.length > 0 ? (
+                  <div className="space-y-3">
+                    {recentAlerts.map(alert => (
+                      <div 
+                        key={alert.id} 
+                        className={`p-3 rounded-lg border ${
+                          alert.severity === 'high' ? 'bg-red-50 border-red-100' :
+                          alert.severity === 'medium' ? 'bg-orange-50 border-orange-100' :
+                          'bg-yellow-50 border-yellow-100'
+                        }`}
+                      >
+                        <div className="flex items-start">
+                          <AlertTriangle className={`mr-2 h-4 w-4 mt-0.5 ${
+                            alert.severity === 'high' ? 'text-red-500' :
+                            alert.severity === 'medium' ? 'text-orange-500' :
+                            'text-yellow-500'
+                          }`} />
+                          <div>
+                            <p className="text-sm font-medium">{alert.title}</p>
+                            <p className="text-xs text-gray-600">{alert.place}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {format(new Date(alert.time), "MMM d, h:mm a")}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-6 text-gray-500">
+                    <MessageSquareWarning className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+                    <p className="text-sm">No recent alerts</p>
+                    <p className="text-xs mt-1 text-gray-400">
+                      Alerts will appear here when significant seismic activity is detected
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

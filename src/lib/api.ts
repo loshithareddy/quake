@@ -1,3 +1,4 @@
+
 import type { Earthquake } from "./types";
 
 const SOURCES = {
@@ -8,9 +9,18 @@ const SOURCES = {
 
 async function fetchFromSource(source: string, url: string): Promise<Earthquake[]> {
   try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Failed to fetch from ${source}`);
+    const response = await fetch(url, {
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+      },
+    });
+    
+    if (!response.ok) throw new Error(`Failed to fetch from ${source} (Status: ${response.status})`);
     const data = await response.json();
+
+    // Log success for debugging
+    console.log(`Successfully fetched data from ${source}`);
 
     switch (source) {
       case "USGS":
@@ -59,12 +69,30 @@ async function fetchFromSource(source: string, url: string): Promise<Earthquake[
 }
 
 export async function fetchEarthquakes(): Promise<Earthquake[]> {
-  const promises = Object.entries(SOURCES).map(([source, url]) => 
-    fetchFromSource(source, url)
+  console.log("Fetching earthquake data from all sources...");
+  
+  // Use Promise.allSettled to prevent one failed source from blocking the others
+  const results = await Promise.allSettled(
+    Object.entries(SOURCES).map(([source, url]) => fetchFromSource(source, url))
   );
-
-  const results = await Promise.all(promises);
-  const allEarthquakes = results.flat();
-
-  return allEarthquakes.sort((a, b) => b.time - a.time);
+  
+  // Process results, including only fulfilled promises
+  const fulfilledResults = results
+    .filter((result): result is PromiseFulfilledResult<Earthquake[]> => 
+      result.status === 'fulfilled'
+    )
+    .map(result => result.value);
+  
+  const allEarthquakes = fulfilledResults.flat();
+  
+  // Log count of earthquakes fetched
+  console.log(`Fetched a total of ${allEarthquakes.length} earthquakes`);
+  
+  // Deduplicate earthquakes by ID to handle potential overlaps between sources
+  // and sort by most recent
+  const uniqueEarthquakes = Array.from(
+    new Map(allEarthquakes.map(eq => [eq.id, eq])).values()
+  ).sort((a, b) => b.time - a.time);
+  
+  return uniqueEarthquakes;
 }
