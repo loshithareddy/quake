@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -11,10 +12,10 @@ interface MapProps {
 const MAPBOX_TOKEN = "pk.eyJ1IjoiZWFydGgxMjMiLCJhIjoiY201bGtwNWk5MW9jNDJpc2Rzazd3bDRzNCJ9.w4fTRntk2IsCm1B_hjfb1g";
 
 const getMarkerColor = (magnitude: number): string => {
-  if (magnitude >= 7) return "#FF0000"; // Red for severe
-  if (magnitude >= 5) return "#FFA500"; // Orange for strong
-  if (magnitude >= 3) return "#FFFF00"; // Yellow for moderate
-  return "#00FF00"; // Green for light
+  if (magnitude >= 7) return "#ea384c"; // High risk - Red
+  if (magnitude >= 5) return "#F97316"; // Medium risk - Orange
+  if (magnitude >= 3) return "#22c55e"; // Low risk - Green
+  return "#22c55e"; // Default - Green
 };
 
 const Map = ({ earthquakes }: MapProps) => {
@@ -33,9 +34,9 @@ const Map = ({ earthquakes }: MapProps) => {
       
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style: "mapbox://styles/mapbox/light-v11", // Changed to light theme
-        center: [0, 0],
-        zoom: 2,
+        style: "mapbox://styles/mapbox/light-v11",
+        center: [78.9629, 20.5937], // Center on India
+        zoom: 4,
       });
 
       map.current.on('load', () => {
@@ -44,7 +45,7 @@ const Map = ({ earthquakes }: MapProps) => {
         // Add navigation controls
         map.current?.addControl(new mapboxgl.NavigationControl(), "top-right");
 
-        // Get user location only after map is loaded
+        // Get user location
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -88,7 +89,7 @@ const Map = ({ earthquakes }: MapProps) => {
     }
   }, [toast]);
 
-  // Add earthquake markers only after map is initialized
+  // Add earthquake markers
   useEffect(() => {
     if (!map.current || !earthquakes || !isMapInitialized) return;
 
@@ -99,19 +100,29 @@ const Map = ({ earthquakes }: MapProps) => {
         markers[0].remove();
       }
 
-      // Add new markers
+      // Add new markers with risk-based colors
       earthquakes.forEach((eq) => {
         const color = getMarkerColor(eq.magnitude);
         
-        new mapboxgl.Marker({ color })
+        // Create marker element with pulse effect
+        const el = document.createElement('div');
+        el.className = 'marker';
+        el.style.width = '20px';
+        el.style.height = '20px';
+        el.style.borderRadius = '50%';
+        el.style.backgroundColor = color;
+        el.style.boxShadow = `0 0 0 2px ${color}33`;
+        el.style.animation = 'pulse 2s infinite';
+        
+        new mapboxgl.Marker({ element: el })
           .setLngLat([eq.longitude, eq.latitude])
           .setPopup(
             new mapboxgl.Popup().setHTML(`
-              <div class="p-2">
-                <h3 class="font-bold">Magnitude ${eq.magnitude}</h3>
-                <p>Depth: ${eq.depth}km</p>
-                <p>Location: ${eq.place}</p>
-                <p>Time: ${new Date(eq.time).toLocaleString()}</p>
+              <div class="p-3 rounded-lg">
+                <h3 class="font-bold text-gray-900">Magnitude ${eq.magnitude}</h3>
+                <p class="text-gray-700">Depth: ${eq.depth}km</p>
+                <p class="text-gray-700">Location: ${eq.place}</p>
+                <p class="text-gray-700">Time: ${new Date(eq.time).toLocaleString()}</p>
               </div>
             `)
           )
@@ -129,6 +140,21 @@ const Map = ({ earthquakes }: MapProps) => {
 
   return (
     <div className="w-full h-full rounded-lg overflow-hidden border border-forest/20 seismic-card">
+      <style>
+        {`
+          @keyframes pulse {
+            0% {
+              box-shadow: 0 0 0 0 rgba(234, 56, 76, 0.4);
+            }
+            70% {
+              box-shadow: 0 0 0 10px rgba(234, 56, 76, 0);
+            }
+            100% {
+              box-shadow: 0 0 0 0 rgba(234, 56, 76, 0);
+            }
+          }
+        `}
+      </style>
       <div ref={mapContainer} className="w-full h-full" />
     </div>
   );
