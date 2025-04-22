@@ -26,36 +26,37 @@ const SeismicGraph = ({ earthquakes }: SeismicGraphProps) => {
   }, [earthquakes]);
 
   return (
-    <div className="w-full h-48 bg-gray-50/50 border border-gray-200 rounded-lg p-4 backdrop-blur-sm shadow-sm">
+    <div className="w-full h-48 bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#8E919620" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
           <XAxis 
             dataKey="time" 
-            stroke="#8E9196"
+            stroke="#374151"
             fontSize={10}
             tickFormatter={(value) => new Date(value).toLocaleDateString()}
           />
           <YAxis 
-            stroke="#8E9196"
+            stroke="#374151"
             fontSize={10}
             label={{ 
               value: 'Magnitude', 
               angle: -90, 
               position: 'insideLeft', 
-              fill: '#8E9196',
+              fill: '#374151',
               fontSize: 12
             }}
           />
           <Tooltip 
             contentStyle={{ 
               backgroundColor: '#FFFFFF',
-              border: '1px solid #E5E5E6',
+              border: '1px solid #E5E7EB',
               borderRadius: '8px',
-              padding: '8px'
+              padding: '8px',
+              color: '#1F2937'
             }}
-            labelStyle={{ color: '#403E43' }}
-            itemStyle={{ color: '#403E43' }}
+            labelStyle={{ color: '#1F2937' }}
+            itemStyle={{ color: '#1F2937' }}
             formatter={(value: any, name: string) => [
               value, 
               name.charAt(0).toUpperCase() + name.slice(1)
@@ -64,16 +65,16 @@ const SeismicGraph = ({ earthquakes }: SeismicGraphProps) => {
           <Line 
             type="monotone" 
             dataKey="magnitude" 
-            stroke="#8A898C"
+            stroke="#0A4D92"
             strokeWidth={2}
             dot={{ 
-              fill: '#8A898C', 
+              fill: '#0A4D92', 
               r: 4,
               strokeWidth: 2
             }}
             activeDot={{
               r: 6,
-              stroke: '#403E43',
+              stroke: '#0A4D92',
               strokeWidth: 2
             }}
           />

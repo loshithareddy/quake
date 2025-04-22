@@ -43,11 +43,11 @@ const indianStates = [
 const getRiskColor = (riskLevel: string) => {
   switch (riskLevel) {
     case "high":
-      return "bg-red-500/20 border-red-500/50 text-red-500";
+      return "bg-red-100 border-red-300 text-red-700";
     case "moderate":
-      return "bg-orange-500/20 border-orange-500/50 text-orange-500";
+      return "bg-orange-100 border-orange-300 text-orange-700";
     default:
-      return "bg-green-500/20 border-green-500/50 text-green-500";
+      return "bg-green-100 border-green-300 text-green-700";
   }
 };
 
@@ -67,7 +67,7 @@ export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
 
   return (
     <Collapsible className="seismic-card">
-      <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-forest hover:bg-forest/5">
+      <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-gray-800 hover:bg-gray-50">
         <span className="flex items-center">
           <Activity className="mr-2" />
           State-wise Seismic Activity
@@ -79,7 +79,7 @@ export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
           <select
             value={selectedState}
             onChange={(e) => setSelectedState(e.target.value)}
-            className="col-span-2 p-2 bg-white/80 border border-forest/20 rounded-lg text-forest hover:border-forest/50 transition-colors"
+            className="col-span-2 p-2 bg-white border border-gray-300 rounded-lg text-gray-800 hover:border-gray-400 transition-colors"
           >
             <option value="all">All States</option>
             {indianStates.map(state => (
@@ -93,32 +93,32 @@ export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {indianStates.map(state => {
             const stateEarthquakes = getStateEarthquakes(state.name);
-            const riskClass = `risk-${state.riskLevel}`;
+            const riskClass = getRiskColor(state.riskLevel);
             
             return (
               <div 
                 key={state.name} 
-                className={`seismic-card ${riskClass} transition-all hover:scale-105`}
+                className={`bg-white rounded-lg p-4 shadow-sm ${riskClass}`}
               >
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="font-semibold text-forest">{state.name}</h3>
-                  <span className="text-sm capitalize text-forest/80">{state.riskLevel} Risk</span>
+                  <h3 className="font-semibold">{state.name}</h3>
+                  <span className="text-sm capitalize">{state.riskLevel} Risk</span>
                 </div>
                 <div className="text-sm">
                   {stateEarthquakes.length > 0 ? (
                     <div className="space-y-2">
                       {stateEarthquakes.slice(0, 3).map(eq => (
-                        <div key={eq.id} className="bg-white/50 p-2 rounded">
-                          <div className="flex justify-between text-forest">
+                        <div key={eq.id} className="bg-white/80 p-2 rounded border border-current/20">
+                          <div className="flex justify-between">
                             <span>M {eq.magnitude}</span>
                             <span>{new Date(eq.time).toLocaleDateString()}</span>
                           </div>
-                          <p className="text-xs mt-1 text-forest/80">{eq.place}</p>
+                          <p className="text-xs mt-1 opacity-80">{eq.place}</p>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-center py-2 text-forest/70">No recent activity</p>
+                    <p className="text-center py-2 opacity-70">No recent activity</p>
                   )}
                 </div>
               </div>
