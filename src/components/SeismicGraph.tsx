@@ -65,16 +65,16 @@ const SeismicGraph = ({ earthquakes }: SeismicGraphProps) => {
           <Line 
             type="monotone" 
             dataKey="magnitude" 
-            stroke="#1EAEDB"
+            stroke="#0EA5E9"
             strokeWidth={2}
             dot={{ 
-              fill: '#1EAEDB', 
+              fill: '#0EA5E9', 
               r: 4,
               strokeWidth: 2
             }}
             activeDot={{
               r: 6,
-              stroke: '#1EAEDB',
+              stroke: '#0EA5E9',
               strokeWidth: 2
             }}
           />

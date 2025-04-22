@@ -85,7 +85,7 @@ export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) =
           filteredEarthquakes.map((eq) => (
             <div key={eq.id} className="p-3 rounded-lg bg-white border border-gray-300">
               <div className="flex items-center justify-between mb-2">
-                <span className={`text-lg font-bold ${eq.magnitude >= 5 ? 'text-red-500' : 'text-forest'}`}>
+                <span className={`text-lg font-bold ${eq.magnitude >= 5 ? 'text-red-500' : 'text-gray-800'}`}>
                   Magnitude {eq.magnitude}
                 </span>
                 <span className="text-sm text-gray-600">

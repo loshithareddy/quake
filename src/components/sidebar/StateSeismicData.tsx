@@ -3,7 +3,6 @@ import { useState } from "react";
 import { ChevronDown, Activity } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { Earthquake } from "@/lib/types";
-import SeismicGraph from "../SeismicGraph";
 
 interface StateSeismicDataProps {
   earthquakes?: Earthquake[];
@@ -76,30 +75,26 @@ export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
         <ChevronDown className="h-4 w-4" />
       </CollapsibleTrigger>
       <CollapsibleContent className="p-4 space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <select
-            value={selectedState}
-            onChange={(e) => setSelectedState(e.target.value)}
-            className="col-span-2 p-2 bg-white border border-gray-300 rounded-lg text-gray-800 hover:border-gray-400 transition-colors"
-          >
-            <option value="all">All States</option>
-            {indianStates.map(state => (
-              <option key={state.name} value={state.name}>{state.name}</option>
-            ))}
-          </select>
-        </div>
-
-        <SeismicGraph earthquakes={filteredEarthquakes} />
+        <select
+          value={selectedState}
+          onChange={(e) => setSelectedState(e.target.value)}
+          className="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-800 hover:border-gray-400 transition-colors"
+        >
+          <option value="all">All States</option>
+          {indianStates.map(state => (
+            <option key={state.name} value={state.name}>{state.name}</option>
+          ))}
+        </select>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {indianStates.map(state => {
+          {indianStates.slice(0, 6).map(state => {
             const stateEarthquakes = getStateEarthquakes(state.name);
             const riskClass = getRiskColor(state.riskLevel);
             
             return (
               <div 
                 key={state.name} 
-                className={`bg-white rounded-lg p-4 shadow-sm ${riskClass}`}
+                className={`rounded-lg p-4 shadow-sm ${riskClass}`}
               >
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="font-semibold">{state.name}</h3>
