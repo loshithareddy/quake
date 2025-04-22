@@ -48,8 +48,8 @@ export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) =
   }, [earthquakes, lastMagnitude, toast]);
 
   return (
-    <Collapsible className="border border-mint/20 rounded-lg">
-      <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-mint hover:bg-forest/50">
+    <Collapsible className="seismic-card">
+      <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-gray-800 hover:bg-gray-50">
         <span className="flex items-center">
           <AlertTriangle className="mr-2" />
           Seismic Activity in India
@@ -63,13 +63,13 @@ export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) =
             placeholder="Enter location to filter data..."
             value={selectedLocation}
             onChange={(e) => setSelectedLocation(e.target.value)}
-            className="w-full p-2 bg-transparent border border-mint/20 rounded text-white"
+            className="w-full p-2 bg-white border border-gray-300 rounded text-gray-800"
           />
           
           <select
             value={selectedSource}
             onChange={(e) => setSelectedSource(e.target.value)}
-            className="w-full p-2 bg-forest border border-mint/20 rounded text-white"
+            className="w-full p-2 bg-white border border-gray-300 rounded text-gray-800"
           >
             {sources.map(source => (
               <option key={source} value={source}>
@@ -83,19 +83,19 @@ export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) =
         
         {filteredEarthquakes && filteredEarthquakes.length > 0 && (
           filteredEarthquakes.map((eq) => (
-            <div key={eq.id} className="p-3 rounded-lg bg-forest border border-mint/20">
+            <div key={eq.id} className="p-3 rounded-lg bg-white border border-gray-300">
               <div className="flex items-center justify-between mb-2">
-                <span className={`text-lg font-bold ${eq.magnitude >= 5 ? 'text-red-500' : 'text-mint'}`}>
+                <span className={`text-lg font-bold ${eq.magnitude >= 5 ? 'text-red-500' : 'text-forest'}`}>
                   Magnitude {eq.magnitude}
                 </span>
-                <span className="text-sm text-white/60">
+                <span className="text-sm text-gray-600">
                   {format(new Date(eq.time), "PPp")}
                 </span>
               </div>
-              <p className="text-white/80 mb-1">{eq.place}</p>
+              <p className="text-gray-800 mb-1">{eq.place}</p>
               <div className="flex justify-between">
-                <p className="text-sm text-white/60">Depth: {eq.depth}km</p>
-                <span className="text-xs text-mint/60">Source: {eq.source || "USGS"}</span>
+                <p className="text-sm text-gray-600">Depth: {eq.depth}km</p>
+                <span className="text-xs text-gray-500">Source: {eq.source || "USGS"}</span>
               </div>
             </div>
           ))

@@ -32,18 +32,18 @@ const SeismicGraph = ({ earthquakes }: SeismicGraphProps) => {
           <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
           <XAxis 
             dataKey="time" 
-            stroke="#374151"
+            stroke="#222222"
             fontSize={10}
             tickFormatter={(value) => new Date(value).toLocaleDateString()}
           />
           <YAxis 
-            stroke="#374151"
+            stroke="#222222"
             fontSize={10}
             label={{ 
               value: 'Magnitude', 
               angle: -90, 
               position: 'insideLeft', 
-              fill: '#374151',
+              fill: '#222222',
               fontSize: 12
             }}
           />
@@ -53,10 +53,10 @@ const SeismicGraph = ({ earthquakes }: SeismicGraphProps) => {
               border: '1px solid #E5E7EB',
               borderRadius: '8px',
               padding: '8px',
-              color: '#1F2937'
+              color: '#222222'
             }}
-            labelStyle={{ color: '#1F2937' }}
-            itemStyle={{ color: '#1F2937' }}
+            labelStyle={{ color: '#222222' }}
+            itemStyle={{ color: '#222222' }}
             formatter={(value: any, name: string) => [
               value, 
               name.charAt(0).toUpperCase() + name.slice(1)
@@ -65,16 +65,16 @@ const SeismicGraph = ({ earthquakes }: SeismicGraphProps) => {
           <Line 
             type="monotone" 
             dataKey="magnitude" 
-            stroke="#0A4D92"
+            stroke="#1EAEDB"
             strokeWidth={2}
             dot={{ 
-              fill: '#0A4D92', 
+              fill: '#1EAEDB', 
               r: 4,
               strokeWidth: 2
             }}
             activeDot={{
               r: 6,
-              stroke: '#0A4D92',
+              stroke: '#1EAEDB',
               strokeWidth: 2
             }}
           />
