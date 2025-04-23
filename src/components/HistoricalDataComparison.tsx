@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { Button } from "@/components/ui/button";
@@ -16,12 +15,20 @@ const historicalData = [
   { year: "2024", events: 28, avgMagnitude: 3.2, maxMagnitude: 5.6 },
 ];
 
-// Mock monthly data for current year
+// Extended monthly data with 12 months
 const monthlyData2024 = [
   { month: "Jan", events: 8, avgMagnitude: 3.1, maxMagnitude: 5.2 },
   { month: "Feb", events: 6, avgMagnitude: 3.0, maxMagnitude: 4.8 },
   { month: "Mar", events: 9, avgMagnitude: 3.4, maxMagnitude: 5.6 },
   { month: "Apr", events: 5, avgMagnitude: 3.2, maxMagnitude: 4.9 },
+  { month: "May", events: 3, avgMagnitude: 3.0, maxMagnitude: 4.3 },
+  { month: "Jun", events: 4, avgMagnitude: 2.9, maxMagnitude: 4.2 },
+  { month: "Jul", events: 7, avgMagnitude: 3.5, maxMagnitude: 5.4 },
+  { month: "Aug", events: 2, avgMagnitude: 2.9, maxMagnitude: 4.0 },
+  { month: "Sep", events: 1, avgMagnitude: 3.0, maxMagnitude: 4.0 },
+  { month: "Oct", events: 2, avgMagnitude: 2.8, maxMagnitude: 3.8 },
+  { month: "Nov", events: 0, avgMagnitude: 0, maxMagnitude: 0 },
+  { month: "Dec", events: 0, avgMagnitude: 0, maxMagnitude: 0 },
 ];
 
 const HistoricalDataComparison = () => {
