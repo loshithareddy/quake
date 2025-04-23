@@ -17,13 +17,18 @@ const getMarkerColor = (magnitude: number): string => {
   return "#22c55e"; // Low risk - Green
 };
 
-const Map = ({ earthquakes }: MapProps) => {
+const Map = ({ earthquakes = [] }: MapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
   const { toast } = useToast();
   const markersRef = useRef<mapboxgl.Marker[]>([]);
+  
+  // Log the earthquakes data when it changes
+  useEffect(() => {
+    console.log("Earthquakes data in Map component:", earthquakes?.length, earthquakes);
+  }, [earthquakes]);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -121,7 +126,18 @@ const Map = ({ earthquakes }: MapProps) => {
       // Log to see if we have earthquakes data
       console.log(`Adding ${earthquakes.length} earthquake markers to map`);
 
+      // Make sure there's data to display
+      if (earthquakes.length === 0) {
+        console.warn("No earthquake data available to display on map");
+        return;
+      }
+
       earthquakes.forEach((eq) => {
+        if (!eq.latitude || !eq.longitude) {
+          console.warn(`Invalid coordinates for earthquake ${eq.id}:`, eq);
+          return;
+        }
+
         // Determine marker color based on magnitude
         const color = getMarkerColor(eq.magnitude);
         
