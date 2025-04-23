@@ -3,7 +3,6 @@ import { Clock } from "lucide-react";
 import type { Earthquake } from "@/lib/types";
 import { useState, useEffect } from "react";
 import { EmergencyContacts } from "./sidebar/EmergencyContacts";
-// import { LocationSeismicData } from "./sidebar/LocationSeismicData";
 import { StateSeismicData } from "./sidebar/StateSeismicData";
 import { RecentEvents } from "./sidebar/RecentEvents";
 import { HistoricalEvents } from "./sidebar/HistoricalEvents";
@@ -52,10 +51,9 @@ const Sidebar = ({ earthquakes }: SidebarProps) => {
 
       <div className="space-y-4">
         {user && <AlertNotifications />}
-        {/* <LocationSeismicData earthquakes={earthquakes} /> */}
         <StateSeismicData earthquakes={earthquakes} />
         <EmergencyContacts />
-        <RecentEvents />
+        <RecentEvents earthquakes={earthquakes} />
         <HistoricalEvents />
         <SafetyTips />
         <FeedbackSection />

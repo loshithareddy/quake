@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -66,17 +67,6 @@ const Map = ({ earthquakes }: MapProps) => {
               setUserLocation([longitude, latitude]);
 
               if (map.current) {
-                // Fly to user location with animation
-                map.current.flyTo({
-                  center: [longitude, latitude],
-                  zoom: 6,
-                  speed: 0.8,
-                  curve: 1,
-                  easing(t) {
-                    return t;
-                  }
-                });
-
                 // Add user marker (cyan color, not affected by risk coloring)
                 new mapboxgl.Marker({
                   color: "#64FFDA",
@@ -128,41 +118,57 @@ const Map = ({ earthquakes }: MapProps) => {
       markersRef.current.forEach(marker => marker.remove());
       markersRef.current = [];
 
-      earthquakes.forEach((eq) => {
-        let color = "#22c55e";
-        if (eq.magnitude >= 7) color = "#ea384c"; // Red for high risk
-        else if (eq.magnitude >= 5) color = "#F97316"; // Orange for medium
-        // else green (already #22c55e)
+      // Log to see if we have earthquakes data
+      console.log(`Adding ${earthquakes.length} earthquake markers to map`);
 
-        const size = eq.magnitude >= 7 ? 26 : eq.magnitude >= 5 ? 22 : 16;
+      earthquakes.forEach((eq) => {
+        // Determine marker color based on magnitude
+        const color = getMarkerColor(eq.magnitude);
+        
+        // Size based on magnitude
+        const size = eq.magnitude >= 7 ? 26 : eq.magnitude >= 5 ? 22 : 18;
+        
+        // Create custom marker element
         const el = document.createElement('div');
-        el.className = 'marker';
+        el.className = 'earthquake-marker';
         el.style.width = `${size}px`;
         el.style.height = `${size}px`;
         el.style.borderRadius = '50%';
         el.style.backgroundColor = color;
-        el.style.boxShadow = `0 0 0 2px ${color}88`; // Better visible border
-        el.style.animation = 'pulse 2s infinite';
+        el.style.border = `2px solid white`;
+        el.style.boxShadow = `0 0 0 2px ${color}88, 0 0 10px rgba(0,0,0,0.5)`;
+        
+        // Add pulse animation based on risk level
+        if (eq.magnitude >= 7) {
+          el.style.animation = 'pulse-high 1.5s infinite';
+        } else if (eq.magnitude >= 5) {
+          el.style.animation = 'pulse-medium 2s infinite';
+        } else {
+          el.style.animation = 'pulse-low 3s infinite';
+        }
 
+        // Create and add the marker
         const marker = new mapboxgl.Marker({ element: el })
           .setLngLat([eq.longitude, eq.latitude])
           .setPopup(
             new mapboxgl.Popup({
-              closeButton: false,
+              closeButton: true,
               maxWidth: "320px",
               className: 'earthquake-popup'
             }).setHTML(`
               <div class="p-3 rounded-lg">
-                <h3 class="font-bold text-gray-900">Magnitude ${eq.magnitude}</h3>
-                <p class="text-gray-700">Depth: ${eq.depth}km</p>
-                <p class="text-gray-700">Location: ${eq.place}</p>
-                <p class="text-gray-700">Time: ${new Date(eq.time).toLocaleString()}</p>
-                <span class="inline-block px-2 py-1 mt-2 rounded-full text-xs ${eq.magnitude >= 7
+                <h3 class="font-bold text-lg mb-1 text-gray-900">Magnitude ${eq.magnitude.toFixed(1)}</h3>
+                <p class="text-gray-700 mb-1"><span class="font-semibold">Depth:</span> ${eq.depth}km</p>
+                <p class="text-gray-700 mb-1"><span class="font-semibold">Location:</span> ${eq.place}</p>
+                <p class="text-gray-700 mb-1"><span class="font-semibold">Time:</span> ${new Date(eq.time).toLocaleString()}</p>
+                <p class="text-gray-700 mb-1"><span class="font-semibold">Source:</span> ${eq.source || 'Unknown'}</p>
+                <span class="inline-block px-3 py-1 mt-2 rounded-full text-sm font-semibold ${
+                  eq.magnitude >= 7
                     ? 'bg-red-100 text-red-800'
                     : eq.magnitude >= 5
                       ? 'bg-orange-100 text-orange-800'
                       : 'bg-green-100 text-green-800'
-                  }">
+                }">
                   ${eq.magnitude >= 7 ? 'High Risk' : eq.magnitude >= 5 ? 'Medium Risk' : 'Low Risk'}
                 </span>
               </div>
@@ -186,29 +192,73 @@ const Map = ({ earthquakes }: MapProps) => {
     <div className="w-full h-full rounded-lg overflow-hidden border border-forest/20 seismic-card">
       <style>
         {`
-          @keyframes pulse {
+          @keyframes pulse-high {
             0% {
-              box-shadow: 0 0 0 0 rgba(234, 56, 76, 0.4);
+              box-shadow: 0 0 0 0 rgba(234, 56, 76, 0.7), 0 0 0 0 rgba(234, 56, 76, 0.4);
             }
-            70% {
-              box-shadow: 0 0 0 10px rgba(234, 56, 76, 0);
+            50% {
+              box-shadow: 0 0 0 10px rgba(234, 56, 76, 0), 0 0 0 5px rgba(234, 56, 76, 0);
             }
             100% {
-              box-shadow: 0 0 0 0 rgba(234, 56, 76, 0);
+              box-shadow: 0 0 0 0 rgba(234, 56, 76, 0), 0 0 0 0 rgba(234, 56, 76, 0);
             }
           }
-          .earthquake-popup .mapboxgl-popup-content {
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          
+          @keyframes pulse-medium {
+            0% {
+              box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7), 0 0 0 0 rgba(249, 115, 22, 0.4);
+            }
+            50% {
+              box-shadow: 0 0 0 8px rgba(249, 115, 22, 0), 0 0 0 4px rgba(249, 115, 22, 0);
+            }
+            100% {
+              box-shadow: 0 0 0 0 rgba(249, 115, 22, 0), 0 0 0 0 rgba(249, 115, 22, 0);
+            }
           }
+          
+          @keyframes pulse-low {
+            0% {
+              box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7), 0 0 0 0 rgba(34, 197, 94, 0.4);
+            }
+            50% {
+              box-shadow: 0 0 0 6px rgba(34, 197, 94, 0), 0 0 0 3px rgba(34, 197, 94, 0);
+            }
+            100% {
+              box-shadow: 0 0 0 0 rgba(34, 197, 94, 0), 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+          }
+          
+          .earthquake-popup .mapboxgl-popup-content {
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 8px;
+          }
+          
+          .earthquake-popup .mapboxgl-popup-tip {
+            border-top-color: white;
+          }
+          
           .custom-popup .mapboxgl-popup-content {
-            background: rgba(34, 197, 94, 0.9);
-            color: white;
+            background: rgba(100, 255, 218, 0.9);
+            color: rgb(22, 78, 99);
+            font-weight: bold;
             border-radius: 8px;
             padding: 8px 12px;
           }
+          
           .custom-popup .mapboxgl-popup-tip {
-            border-top-color: rgba(34, 197, 94, 0.9);
+            border-top-color: rgba(100, 255, 218, 0.9);
+          }
+          
+          .earthquake-marker {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+          }
+          
+          .earthquake-marker:hover {
+            transform: scale(1.2);
+            z-index: 10;
           }
         `}
       </style>
