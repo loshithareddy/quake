@@ -100,33 +100,25 @@ const MapPage = () => {
         <h1 className="text-3xl font-bold text-indigo-900 mb-4">Interactive Seismic Map</h1>
         
         {/* Risk level indicators */}
-        <div className="mb-4 flex flex-wrap gap-3">
-          <div className="flex items-center bg-white/80 px-3 py-1.5 rounded-full shadow-sm">
-            <span className="h-3 w-3 rounded-full bg-[#ea384c] mr-2"></span>
-            <span className="text-sm font-medium text-gray-700">High Risk ({highRiskCount})</span>
-          </div>
-          <div className="flex items-center bg-white/80 px-3 py-1.5 rounded-full shadow-sm">
-            <span className="h-3 w-3 rounded-full bg-[#F97316] mr-2"></span>
-            <span className="text-sm font-medium text-gray-700">Medium Risk ({mediumRiskCount})</span>
-          </div>
-          <div className="flex items-center bg-white/80 px-3 py-1.5 rounded-full shadow-sm">
-            <span className="h-3 w-3 rounded-full bg-[#22c55e] mr-2"></span>
-            <span className="text-sm font-medium text-gray-700">Low Risk ({lowRiskCount})</span>
-          </div>
-          <div className="flex items-center bg-white/80 px-3 py-1.5 rounded-full shadow-sm">
-            <span className="h-3 w-3 rounded-full bg-[#64FFDA] mr-2"></span>
-            <span className="text-sm font-medium text-gray-700">Your Location</span>
-          </div>
-        </div>
-        
-        {/* Map status indicators */}
-        {isLoading && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
-            <Info className="text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-            <div>
-              <p className="text-blue-700">Loading earthquake data...</p>
-            </div>
-          </div>
+        <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm font-medium">
+  <div className="flex items-center space-x-3 bg-gradient-to-r from-red-500 to-red-700 text-white px-4 py-2 rounded-xl shadow-md">
+    <AlertTriangle className="w-5 h-5" />
+    <span>High Risk ({highRiskCount})</span>
+  </div>
+  <div className="flex items-center space-x-3 bg-gradient-to-r from-orange-400 to-yellow-500 text-white px-4 py-2 rounded-xl shadow-md">
+    <AlertTriangle className="w-5 h-5" />
+    <span>Medium Risk ({mediumRiskCount})</span>
+  </div>
+  <div className="flex items-center space-x-3 bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-xl shadow-md">
+    <AlertTriangle className="w-5 h-5" />
+    <span>Low Risk ({lowRiskCount})</span>
+  </div>
+  <div className="flex items-center space-x-3 bg-gradient-to-r from-cyan-400 to-teal-500 text-white px-4 py-2 rounded-xl shadow-md">
+    <Info className="w-5 h-5" />
+    <span>Your Location</span>
+  </div>
+</div>
+
         )}
         
         {!isLoading && error && (
