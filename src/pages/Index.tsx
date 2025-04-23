@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 const Index = () => {
   const { toast } = useToast();
   const [lastUpdate, setLastUpdate] = useState(new Date());
-  
+
   const { data: earthquakes, error, refetch } = useQuery({
     queryKey: ["earthquakes"],
     queryFn: fetchEarthquakes,
@@ -27,7 +27,7 @@ const Index = () => {
       refetch();
       setLastUpdate(new Date());
     }, 180000); // 3 minutes (reduced from 5)
-    
+
     return () => clearInterval(updateInterval);
   }, [refetch]);
 
@@ -98,11 +98,12 @@ const Index = () => {
           <div className="col-span-1 lg:col-span-2">
             <Map earthquakes={earthquakes} />
           </div>
-          
-          <div>
+
+          {/* Removed LocationSeismicData and 'Recent Earthquakes' NewsHeadlines, go directly to NewsFeed */}
+          <div className="col-span-1">
             <NewsFeed />
           </div>
-          <div>
+          <div className="col-span-1">
             <HistoricalDataComparison />
           </div>
         </div>

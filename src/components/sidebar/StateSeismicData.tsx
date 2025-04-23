@@ -4,40 +4,44 @@ import { ChevronDown, Activity } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { Earthquake } from "@/lib/types";
 
-interface StateSeismicDataProps {
-  earthquakes?: Earthquake[];
-}
-
+// Complete list of Indian states and union territories with risk levels.
 const indianStates = [
   { name: "Andhra Pradesh", riskLevel: "moderate" },
   { name: "Arunachal Pradesh", riskLevel: "high" },
   { name: "Assam", riskLevel: "high" },
   { name: "Bihar", riskLevel: "moderate" },
+  { name: "Chhattisgarh", riskLevel: "low" },
+  { name: "Goa", riskLevel: "low" },
   { name: "Gujarat", riskLevel: "high" },
+  { name: "Haryana", riskLevel: "low" },
   { name: "Himachal Pradesh", riskLevel: "high" },
-  { name: "Jammu and Kashmir", riskLevel: "high" },
+  { name: "Jharkhand", riskLevel: "low" },
+  { name: "Karnataka", riskLevel: "low" },
+  { name: "Kerala", riskLevel: "low" },
+  { name: "Madhya Pradesh", riskLevel: "low" },
   { name: "Maharashtra", riskLevel: "moderate" },
   { name: "Manipur", riskLevel: "high" },
   { name: "Meghalaya", riskLevel: "high" },
   { name: "Mizoram", riskLevel: "high" },
   { name: "Nagaland", riskLevel: "high" },
-  { name: "Punjab", riskLevel: "moderate" },
-  { name: "Sikkim", riskLevel: "high" },
-  { name: "Uttarakhand", riskLevel: "high" },
-  { name: "Chhattisgarh", riskLevel: "low" },
-  { name: "Haryana", riskLevel: "low" },
-  { name: "Jharkhand", riskLevel: "low" },
-  { name: "Karnataka", riskLevel: "low" },
-  { name: "Kerala", riskLevel: "low" },
-  { name: "Madhya Pradesh", riskLevel: "low" },
   { name: "Odisha", riskLevel: "low" },
+  { name: "Punjab", riskLevel: "moderate" },
   { name: "Rajasthan", riskLevel: "low" },
+  { name: "Sikkim", riskLevel: "high" },
   { name: "Tamil Nadu", riskLevel: "low" },
   { name: "Telangana", riskLevel: "low" },
   { name: "Tripura", riskLevel: "moderate" },
   { name: "Uttar Pradesh", riskLevel: "low" },
+  { name: "Uttarakhand", riskLevel: "high" },
   { name: "West Bengal", riskLevel: "low" },
-  { name: "Delhi", riskLevel: "moderate" }
+  { name: "Delhi", riskLevel: "moderate" },
+  { name: "Andaman and Nicobar Islands", riskLevel: "high" },
+  { name: "Chandigarh", riskLevel: "low" },
+  { name: "Dadra and Nagar Haveli and Daman and Diu", riskLevel: "low" },
+  { name: "Jammu and Kashmir", riskLevel: "high" },
+  { name: "Ladakh", riskLevel: "high" },
+  { name: "Lakshadweep", riskLevel: "low" },
+  { name: "Puducherry", riskLevel: "low" }
 ];
 
 const getRiskColor = (riskLevel: string) => {
@@ -51,15 +55,22 @@ const getRiskColor = (riskLevel: string) => {
   }
 };
 
+interface StateSeismicDataProps {
+  earthquakes?: Earthquake[];
+}
+
 export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
   const [selectedState, setSelectedState] = useState("all");
 
   const getStateEarthquakes = (state: string) => {
     if (!earthquakes) return [];
-    return earthquakes.filter(eq => 
+    return earthquakes.filter(eq =>
       eq.place?.toLowerCase().includes(state.toLowerCase())
     );
   };
+
+  // List of states to show based on selection, all states always shown but can optionally filter for "only one" if desired in the future
+  const statesToShow = indianStates;
 
   return (
     <Collapsible className="seismic-card">
@@ -71,25 +82,15 @@ export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
         <ChevronDown className="h-4 w-4" />
       </CollapsibleTrigger>
       <CollapsibleContent className="p-4 space-y-4">
-        <select
-          value={selectedState}
-          onChange={(e) => setSelectedState(e.target.value)}
-          className="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-800 hover:border-gray-400 transition-colors"
-        >
-          <option value="all">All States</option>
-          {indianStates.map(state => (
-            <option key={state.name} value={state.name}>{state.name}</option>
-          ))}
-        </select>
-
+        {/* Remove select option to show ALL states at once */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {indianStates.slice(0, 8).map(state => {
+          {statesToShow.map(state => {
             const stateEarthquakes = getStateEarthquakes(state.name);
             const riskClass = getRiskColor(state.riskLevel);
-            
+
             return (
-              <div 
-                key={state.name} 
+              <div
+                key={state.name}
                 className={`rounded-lg p-4 shadow-sm ${riskClass}`}
               >
                 <div className="flex justify-between items-center mb-2">

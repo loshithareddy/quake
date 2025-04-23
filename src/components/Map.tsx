@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -25,13 +24,12 @@ const Map = ({ earthquakes }: MapProps) => {
   const { toast } = useToast();
   const markersRef = useRef<mapboxgl.Marker[]>([]);
 
-  // Initialize map
   useEffect(() => {
     if (!mapContainer.current) return;
 
     try {
       mapboxgl.accessToken = MAPBOX_TOKEN;
-      
+
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/dark-v11",
@@ -43,7 +41,7 @@ const Map = ({ earthquakes }: MapProps) => {
 
       map.current.on('load', () => {
         setIsMapInitialized(true);
-        
+
         // Add navigation controls
         map.current?.addControl(new mapboxgl.NavigationControl(), "top-right");
         map.current?.addControl(new mapboxgl.FullscreenControl(), "top-right");
@@ -51,7 +49,7 @@ const Map = ({ earthquakes }: MapProps) => {
 
         // Add 3D terrain
         map.current?.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
-        
+
         // Add the DEM source
         map.current?.addSource('mapbox-dem', {
           'type': 'raster-dem',
@@ -66,7 +64,7 @@ const Map = ({ earthquakes }: MapProps) => {
             (position) => {
               const { latitude, longitude } = position.coords;
               setUserLocation([longitude, latitude]);
-              
+
               if (map.current) {
                 // Fly to user location with animation
                 map.current.flyTo({
@@ -78,9 +76,9 @@ const Map = ({ earthquakes }: MapProps) => {
                     return t;
                   }
                 });
-                
-                // Add user marker
-                new mapboxgl.Marker({ 
+
+                // Add user marker (cyan color, not affected by risk coloring)
+                new mapboxgl.Marker({
                   color: "#64FFDA",
                   scale: 1.2
                 })
@@ -122,7 +120,6 @@ const Map = ({ earthquakes }: MapProps) => {
     }
   }, [toast]);
 
-  // Add earthquake markers
   useEffect(() => {
     if (!map.current || !earthquakes || !isMapInitialized) return;
 
@@ -131,27 +128,28 @@ const Map = ({ earthquakes }: MapProps) => {
       markersRef.current.forEach(marker => marker.remove());
       markersRef.current = [];
 
-      // Add new markers with risk-based colors
       earthquakes.forEach((eq) => {
-        const color = getMarkerColor(eq.magnitude);
-        const size = eq.magnitude >= 7 ? 24 : eq.magnitude >= 5 ? 20 : 16;
-        
-        // Create marker element with pulse effect
+        let color = "#22c55e";
+        if (eq.magnitude >= 7) color = "#ea384c"; // Red for high risk
+        else if (eq.magnitude >= 5) color = "#F97316"; // Orange for medium
+        // else green (already #22c55e)
+
+        const size = eq.magnitude >= 7 ? 26 : eq.magnitude >= 5 ? 22 : 16;
         const el = document.createElement('div');
         el.className = 'marker';
         el.style.width = `${size}px`;
         el.style.height = `${size}px`;
         el.style.borderRadius = '50%';
         el.style.backgroundColor = color;
-        el.style.boxShadow = `0 0 0 2px ${color}33`;
+        el.style.boxShadow = `0 0 0 2px ${color}88`; // Better visible border
         el.style.animation = 'pulse 2s infinite';
-        
+
         const marker = new mapboxgl.Marker({ element: el })
           .setLngLat([eq.longitude, eq.latitude])
           .setPopup(
             new mapboxgl.Popup({
               closeButton: false,
-              maxWidth: "300px",
+              maxWidth: "320px",
               className: 'earthquake-popup'
             }).setHTML(`
               <div class="p-3 rounded-lg">
@@ -159,20 +157,19 @@ const Map = ({ earthquakes }: MapProps) => {
                 <p class="text-gray-700">Depth: ${eq.depth}km</p>
                 <p class="text-gray-700">Location: ${eq.place}</p>
                 <p class="text-gray-700">Time: ${new Date(eq.time).toLocaleString()}</p>
-                <p class="text-gray-700 mt-1">
-                  <span class="inline-block px-2 py-1 rounded-full text-xs ${
-                    eq.magnitude >= 7 ? 'bg-red-100 text-red-800' : 
-                    eq.magnitude >= 5 ? 'bg-orange-100 text-orange-800' : 
-                    'bg-green-100 text-green-800'
+                <span class="inline-block px-2 py-1 mt-2 rounded-full text-xs ${eq.magnitude >= 7
+                    ? 'bg-red-100 text-red-800'
+                    : eq.magnitude >= 5
+                      ? 'bg-orange-100 text-orange-800'
+                      : 'bg-green-100 text-green-800'
                   }">
-                    ${eq.magnitude >= 7 ? 'High Risk' : eq.magnitude >= 5 ? 'Medium Risk' : 'Low Risk'}
-                  </span>
-                </p>
+                  ${eq.magnitude >= 7 ? 'High Risk' : eq.magnitude >= 5 ? 'Medium Risk' : 'Low Risk'}
+                </span>
               </div>
             `)
           )
           .addTo(map.current);
-        
+
         markersRef.current.push(marker);
       });
     } catch (error) {
@@ -200,19 +197,16 @@ const Map = ({ earthquakes }: MapProps) => {
               box-shadow: 0 0 0 0 rgba(234, 56, 76, 0);
             }
           }
-          
           .earthquake-popup .mapboxgl-popup-content {
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
           }
-          
           .custom-popup .mapboxgl-popup-content {
             background: rgba(34, 197, 94, 0.9);
             color: white;
             border-radius: 8px;
             padding: 8px 12px;
           }
-          
           .custom-popup .mapboxgl-popup-tip {
             border-top-color: rgba(34, 197, 94, 0.9);
           }
