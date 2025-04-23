@@ -61,10 +61,6 @@ export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
     );
   };
 
-  const filteredEarthquakes = selectedState === "all" 
-    ? earthquakes 
-    : getStateEarthquakes(selectedState);
-
   return (
     <Collapsible className="seismic-card">
       <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-gray-800 hover:bg-gray-50">
@@ -87,7 +83,7 @@ export const StateSeismicData = ({ earthquakes }: StateSeismicDataProps) => {
         </select>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {indianStates.slice(0, 6).map(state => {
+          {indianStates.slice(0, 8).map(state => {
             const stateEarthquakes = getStateEarthquakes(state.name);
             const riskClass = getRiskColor(state.riskLevel);
             

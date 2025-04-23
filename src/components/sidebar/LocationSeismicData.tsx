@@ -81,11 +81,11 @@ export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) =
         
         <SeismicGraph earthquakes={filteredEarthquakes} />
         
-        {filteredEarthquakes && filteredEarthquakes.length > 0 && (
+        {filteredEarthquakes && filteredEarthquakes.length > 0 ? (
           filteredEarthquakes.map((eq) => (
             <div key={eq.id} className="p-3 rounded-lg bg-white border border-gray-300">
               <div className="flex items-center justify-between mb-2">
-                <span className={`text-lg font-bold ${eq.magnitude >= 5 ? 'text-red-500' : 'text-gray-800'}`}>
+                <span className={`text-lg font-bold ${eq.magnitude >= 5 ? 'text-red-600' : 'text-gray-800'}`}>
                   Magnitude {eq.magnitude}
                 </span>
                 <span className="text-sm text-gray-600">
@@ -99,6 +99,10 @@ export const LocationSeismicData = ({ earthquakes }: LocationSeismicDataProps) =
               </div>
             </div>
           ))
+        ) : (
+          <div className="p-3 bg-white border border-gray-300 rounded-lg text-center">
+            <p className="text-gray-700">No matching events found. Try adjusting your filter.</p>
+          </div>
         )}
       </CollapsibleContent>
     </Collapsible>

@@ -16,7 +16,7 @@ export const RecentEvents = () => {
   const recentEvents = earthquakes?.slice(0, 5) || [];
 
   return (
-    <Collapsible className="border border-mint/20 rounded-lg">
+    <Collapsible className="border border-forest/20 rounded-lg">
       <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-mint hover:bg-forest/50">
         <span className="flex items-center">
           <History className="mr-2" />

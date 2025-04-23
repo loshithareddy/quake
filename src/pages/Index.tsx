@@ -7,7 +7,6 @@ import NewsFeed from "@/components/NewsFeed";
 import HistoricalDataComparison from "@/components/HistoricalDataComparison";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEarthquakes } from "@/lib/api";
-import RecentEarthquakesList from "@/components/RecentEarthquakesList";
 import { Bell, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -98,10 +97,6 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="col-span-1 lg:col-span-2">
             <Map earthquakes={earthquakes} />
-          </div>
-          
-          <div className="col-span-1 lg:col-span-2">
-            <RecentEarthquakesList earthquakes={earthquakes} />
           </div>
           
           <div>
