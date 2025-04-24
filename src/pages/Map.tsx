@@ -101,25 +101,23 @@ const MapPage = () => {
         
         {/* Risk level indicators */}
         <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm font-medium">
-  <div className="flex items-center space-x-3 bg-gradient-to-r from-red-500 to-red-700 text-white px-4 py-2 rounded-xl shadow-md">
-    <AlertTriangle className="w-5 h-5" />
-    <span>High Risk ({highRiskCount})</span>
-  </div>
-  <div className="flex items-center space-x-3 bg-gradient-to-r from-orange-400 to-yellow-500 text-white px-4 py-2 rounded-xl shadow-md">
-    <AlertTriangle className="w-5 h-5" />
-    <span>Medium Risk ({mediumRiskCount})</span>
-  </div>
-  <div className="flex items-center space-x-3 bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-xl shadow-md">
-    <AlertTriangle className="w-5 h-5" />
-    <span>Low Risk ({lowRiskCount})</span>
-  </div>
-  <div className="flex items-center space-x-3 bg-gradient-to-r from-cyan-400 to-teal-500 text-white px-4 py-2 rounded-xl shadow-md">
-    <Info className="w-5 h-5" />
-    <span>Your Location</span>
-  </div>
-</div>
-
-        )}
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-red-500 to-red-700 text-white px-4 py-2 rounded-xl shadow-md">
+            <AlertTriangle className="w-5 h-5" />
+            <span>High Risk ({highRiskCount})</span>
+          </div>
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-orange-400 to-yellow-500 text-white px-4 py-2 rounded-xl shadow-md">
+            <AlertTriangle className="w-5 h-5" />
+            <span>Medium Risk ({mediumRiskCount})</span>
+          </div>
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-xl shadow-md">
+            <AlertTriangle className="w-5 h-5" />
+            <span>Low Risk ({lowRiskCount})</span>
+          </div>
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-cyan-400 to-teal-500 text-white px-4 py-2 rounded-xl shadow-md">
+            <Info className="w-5 h-5" />
+            <span>Your Location</span>
+          </div>
+        </div>
         
         {!isLoading && error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start">
