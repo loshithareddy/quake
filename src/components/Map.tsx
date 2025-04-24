@@ -14,20 +14,22 @@ const getMarkerColor = (magnitude: number): string => {
   return "#22c55e"; // Low risk - Green
 };
 
-// Expanded global mock earthquakes with at least 3 per continent
+// Expanded global mock earthquakes with at least 3 per continent and 25+ total
 const globalMockEarthquakes: Earthquake[] = [
-  // Asia (5)
+  // Asia (6)
   { id: "asia-1", magnitude: 7.3, place: "Tokyo, Japan 🗾", time: Date.now() - 1000 * 60 * 60 * 8, latitude: 35.6895, longitude: 139.6917, depth: 30, source: "JMA" },
   { id: "asia-2", magnitude: 5.9, place: "Kathmandu, Nepal 🏔️", time: Date.now() - 1000 * 60 * 60 * 10, latitude: 27.7172, longitude: 85.3240, depth: 18, source: "IMD" },
   { id: "asia-3", magnitude: 4.3, place: "Islamabad, Pakistan 🇵🇰", time: Date.now() - 1000 * 60 * 60 * 12, latitude: 33.6844, longitude: 73.0479, depth: 25, source: "USGS" },
   { id: "asia-4", magnitude: 6.5, place: "Manila, Philippines 🏝️", time: Date.now() - 1000 * 60 * 60 * 7, latitude: 14.5995, longitude: 120.9842, depth: 22, source: "PHIVOLCS" },
   { id: "asia-5", magnitude: 5.2, place: "Taipei, Taiwan 🇹🇼", time: Date.now() - 1000 * 60 * 60 * 9, latitude: 25.0330, longitude: 121.5654, depth: 15, source: "CWB" },
+  { id: "asia-6", magnitude: 4.8, place: "Bangkok, Thailand 🇹🇭", time: Date.now() - 1000 * 60 * 60 * 5, latitude: 13.7563, longitude: 100.5018, depth: 10, source: "USGS" },
   
-  // Europe (4)
+  // Europe (5)
   { id: "europe-1", magnitude: 6.8, place: "Athens, Greece 🏺", time: Date.now() - 1000 * 60 * 60 * 7, latitude: 37.9838, longitude: 23.7275, depth: 35, source: "EMSC" },
   { id: "europe-2", magnitude: 5.3, place: "Rome, Italy 🍕", time: Date.now() - 1000 * 60 * 60 * 14, latitude: 41.9028, longitude: 12.4964, depth: 12, source: "EMSC" },
   { id: "europe-3", magnitude: 3.7, place: "Ankara, Turkey 🇹🇷", time: Date.now() - 1000 * 60 * 60 * 20, latitude: 39.9334, longitude: 32.8597, depth: 10, source: "KOERI" },
   { id: "europe-4", magnitude: 4.5, place: "Lisbon, Portugal 🇵🇹", time: Date.now() - 1000 * 60 * 60 * 15, latitude: 38.7223, longitude: -9.1393, depth: 14, source: "EMSC" },
+  { id: "europe-5", magnitude: 5.1, place: "Madrid, Spain 🇪🇸", time: Date.now() - 1000 * 60 * 60 * 3, latitude: 40.4168, longitude: -3.7038, depth: 16, source: "IGN" },
   
   // Africa (4)
   { id: "africa-1", magnitude: 6.4, place: "Marrakesh, Morocco 🕌", time: Date.now() - 1000 * 60 * 60 * 6, latitude: 31.6295, longitude: -7.9811, depth: 20, source: "EMSC" },
@@ -35,22 +37,25 @@ const globalMockEarthquakes: Earthquake[] = [
   { id: "africa-3", magnitude: 4.2, place: "Cairo, Egypt 🏺", time: Date.now() - 1000 * 60 * 60 * 19, latitude: 30.0444, longitude: 31.2357, depth: 10, source: "ENSN" },
   { id: "africa-4", magnitude: 5.1, place: "Nairobi, Kenya 🦒", time: Date.now() - 1000 * 60 * 60 * 4, latitude: -1.2921, longitude: 36.8219, depth: 15, source: "USGS" },
   
-  // North America (4)
+  // North America (5)
   { id: "na-1", magnitude: 7.8, place: "Anchorage, Alaska 🗻", time: Date.now() - 1000 * 60 * 60 * 3, latitude: 61.2181, longitude: -149.9003, depth: 40, source: "USGS" },
   { id: "na-2", magnitude: 6.2, place: "San Francisco, California 🌉", time: Date.now() - 1000 * 60 * 60 * 11, latitude: 37.7749, longitude: -122.4194, depth: 17, source: "USGS" },
   { id: "na-3", magnitude: 4.4, place: "Mexico City, Mexico 🌮", time: Date.now() - 1000 * 60 * 60 * 14, latitude: 19.4326, longitude: -99.1332, depth: 15, source: "SSN" },
   { id: "na-4", magnitude: 5.7, place: "Vancouver, Canada 🍁", time: Date.now() - 1000 * 60 * 60 * 2, latitude: 49.2827, longitude: -123.1207, depth: 22, source: "USGS" },
+  { id: "na-5", magnitude: 3.9, place: "Chicago, Illinois 🏙️", time: Date.now() - 1000 * 60 * 60 * 17, latitude: 41.8781, longitude: -87.6298, depth: 8, source: "USGS" },
   
-  // South America (4)
+  // South America (5)
   { id: "sa-1", magnitude: 8.2, place: "Santiago, Chile 🗻", time: Date.now() - 1000 * 60 * 60 * 5, latitude: -33.4489, longitude: -70.6693, depth: 70, source: "USGS" },
   { id: "sa-2", magnitude: 6.5, place: "Lima, Peru 🏔️", time: Date.now() - 1000 * 60 * 60 * 16, latitude: -12.0464, longitude: -77.0428, depth: 30, source: "IGP" },
   { id: "sa-3", magnitude: 5.2, place: "Buenos Aires, Argentina 🥩", time: Date.now() - 1000 * 60 * 60 * 18, latitude: -34.6037, longitude: -58.3816, depth: 20, source: "INPRES" },
   { id: "sa-4", magnitude: 4.8, place: "Bogotá, Colombia ☕", time: Date.now() - 1000 * 60 * 60 * 1, latitude: 4.7110, longitude: -74.0721, depth: 25, source: "SGC" },
+  { id: "sa-5", magnitude: 3.8, place: "Caracas, Venezuela 🇻🇪", time: Date.now() - 1000 * 60 * 60 * 9, latitude: 10.4806, longitude: -66.9036, depth: 15, source: "FUNVISIS" },
   
-  // Australia/Oceania (3)
+  // Australia/Oceania (4)
   { id: "au-1", magnitude: 7.1, place: "Port Moresby, Papua New Guinea 🌴", time: Date.now() - 1000 * 60 * 60 * 9, latitude: -9.4438, longitude: 147.1803, depth: 22, source: "GEOFON" },
   { id: "au-2", magnitude: 5.7, place: "Wellington, New Zealand 🥝", time: Date.now() - 1000 * 60 * 60 * 15, latitude: -41.2865, longitude: 174.7762, depth: 25, source: "GNS" },
   { id: "au-3", magnitude: 4.0, place: "Sydney, Australia 🦘", time: Date.now() - 1000 * 60 * 60 * 21, latitude: -33.8688, longitude: 151.2093, depth: 16, source: "GA" },
+  { id: "au-4", magnitude: 6.1, place: "Suva, Fiji 🏝️", time: Date.now() - 1000 * 60 * 60 * 13, latitude: -18.1416, longitude: 178.4419, depth: 35, source: "USGS" },
   
   // Antarctica (3)
   { id: "ant-1", magnitude: 6.0, place: "Ross Ice Shelf, Antarctica 🧊", time: Date.now() - 1000 * 60 * 60 * 23, latitude: -81.5000, longitude: 175.0000, depth: 12, source: "IRIS" },
@@ -237,7 +242,7 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
   }, [toast]);
 
   useEffect(() => {
-    if (!map.current || !Array.isArray(markersData) || !isMapInitialized) return;
+    if (!map.current || !isMapInitialized) return;
     
     try {
       // Clear existing markers
@@ -303,6 +308,10 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
         // Store marker reference for cleanup
         markersRef.current.push(marker);
       });
+      
+      // Log the number of markers added
+      console.log(`Added ${markersRef.current.length} earthquake markers to the map`);
+      
     } catch (error) {
       console.error("Error adding earthquake markers:", error);
       toast({

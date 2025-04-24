@@ -7,7 +7,7 @@ import { fetchEarthquakes } from "@/lib/api";
 import { format } from "date-fns";
 
 export const RecentEvents = () => {
-  const { data: earthquakes } = useQuery({
+  const { data: earthquakes, isLoading } = useQuery({
     queryKey: ["earthquakes"],
     queryFn: fetchEarthquakes,
   });
@@ -25,7 +25,11 @@ export const RecentEvents = () => {
         <ChevronDown className="h-4 w-4" />
       </CollapsibleTrigger>
       <CollapsibleContent className="p-4">
-        {events.length > 0 ? (
+        {isLoading ? (
+          <div className="p-3 bg-forest rounded-lg border border-mint/20 text-center">
+            <p className="text-white/80">Loading recent events...</p>
+          </div>
+        ) : events.length > 0 ? (
           <div className="space-y-2">
             {events.map((event) => (
               <div key={event.id} className="p-3 bg-forest rounded-lg border border-mint/20">
@@ -44,7 +48,7 @@ export const RecentEvents = () => {
           </div>
         ) : (
           <div className="p-3 bg-forest rounded-lg border border-mint/20 text-center">
-            <p className="text-white/80">Loading recent events...</p>
+            <p className="text-white/80">No recent events available</p>
           </div>
         )}
       </CollapsibleContent>
