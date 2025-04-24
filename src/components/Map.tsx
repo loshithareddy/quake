@@ -173,6 +173,11 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
         zoom: 1.4,
         minZoom: 1.2,
         pitch: 30,
+        scrollZoom: {
+          smooth: true,
+          speed: 0.9,
+          around: 'center'
+        }
       });
 
       map.current.on('load', () => {
@@ -187,6 +192,21 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
           'tileSize': 512,
           'maxzoom': 14
         });
+        
+        // Prevent page scrolling when interacting with the map
+        const mapDiv = mapContainer.current;
+        if (mapDiv) {
+          mapDiv.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }, { passive: false });
+          
+          // Add touch events for mobile
+          mapDiv.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }, { passive: false });
+        }
         
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
@@ -276,7 +296,8 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
             new mapboxgl.Popup({
               closeButton: true,
               maxWidth: "320px",
-              className: 'earthquake-popup'
+              className: 'earthquake-popup',
+              closeOnClick: false
             }).setHTML(`
               <div class="p-3 rounded-lg">
                 <h3 class="font-bold text-lg mb-1 text-gray-900">🌋 Magnitude ${eq.magnitude.toFixed(1)}</h3>
@@ -329,6 +350,7 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
           .earthquake-marker-pin {
             cursor: pointer;
             transition: transform 0.18s cubic-bezier(0.47,1.64,0.41,0.8);
+            z-index: 2;
           }
           .earthquake-marker-pin:hover {
             transform: scale(1.18);
@@ -339,6 +361,7 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
             border: 1px solid rgba(0, 0, 0, 0.1);
             padding: 8px;
+            position: relative;
           }
           .earthquake-popup .mapboxgl-popup-tip {
             border-top-color: white;
@@ -352,6 +375,26 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
           }
           .custom-popup .mapboxgl-popup-tip {
             border-top-color: rgba(100, 255, 218, 0.9);
+          }
+          .mapboxgl-map {
+            overflow: hidden;
+          }
+          .mapboxgl-popup {
+            transform-origin: bottom center;
+            max-width: 350px !important;
+            max-height: 400px !important;
+            z-index: 10;
+          }
+          .mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
+          .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
+          .mapboxgl-popup-anchor-center .mapboxgl-popup-tip,
+          .mapboxgl-popup-anchor-left .mapboxgl-popup-tip,
+          .mapboxgl-popup-anchor-right .mapboxgl-popup-tip,
+          .mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
+          .mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip,
+          .mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
+          .mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
+            display: block;
           }
         `}
       </style>
