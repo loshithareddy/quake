@@ -56,7 +56,7 @@ const Index = () => {
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gradient-to-br from-[#F5F7FA] via-[#E4ECF7] to-[#C3CFE2] pt-16">
-      <Sidebar earthquakes={earthquakes} />
+      <Sidebar />
       <main className="flex-1 p-4 overflow-y-auto">
         <div className="mb-4 flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>

@@ -51,9 +51,9 @@ const Sidebar = ({ earthquakes }: SidebarProps) => {
 
       <div className="space-y-4">
         {user && <AlertNotifications />}
-        <StateSeismicData earthquakes={earthquakes} />
+        <StateSeismicData />
         <EmergencyContacts />
-        <RecentEvents earthquakes={earthquakes} />
+        <RecentEvents />
         <HistoricalEvents />
         <SafetyTips />
         <FeedbackSection />

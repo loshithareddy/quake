@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -13,35 +14,48 @@ const getMarkerColor = (magnitude: number): string => {
   return "#22c55e"; // Low risk - Green
 };
 
+// Expanded global mock earthquakes with at least 3 per continent
 const globalMockEarthquakes: Earthquake[] = [
-  // Asia
-  { id: "asia-1", magnitude: 7.3, place: "Japan 🗾", time: Date.now() - 1000 * 60 * 60 * 8, latitude: 35.6895, longitude: 139.6917, depth: 30, source: "JMA" },
-  { id: "asia-2", magnitude: 5.9, place: "Nepal 🏔️", time: Date.now() - 1000 * 60 * 60 * 10, latitude: 27.7172, longitude: 85.3240, depth: 18, source: "IMD" },
-  { id: "asia-3", magnitude: 4.3, place: "Pakistan 🌍", time: Date.now() - 1000 * 60 * 60 * 12, latitude: 30.3753, longitude: 69.3451, depth: 25, source: "USGS" },
-  // Europe
-  { id: "europe-1", magnitude: 6.8, place: "Greece 🏺", time: Date.now() - 1000 * 60 * 60 * 7, latitude: 39.0742, longitude: 21.8243, depth: 35, source: "EMSC" },
-  { id: "europe-2", magnitude: 5.3, place: "Italy 🍕", time: Date.now() - 1000 * 60 * 60 * 14, latitude: 41.8719, longitude: 12.5674, depth: 12, source: "EMSC" },
-  { id: "europe-3", magnitude: 3.7, place: "Turkey 🇹🇷", time: Date.now() - 1000 * 60 * 60 * 20, latitude: 39.9334, longitude: 32.8597, depth: 10, source: "KOERI" },
-  // Africa
-  { id: "africa-1", magnitude: 6.4, place: "Morocco 🕌", time: Date.now() - 1000 * 60 * 60 * 6, latitude: 31.7917, longitude: -7.0926, depth: 20, source: "EMSC" },
-  { id: "africa-2", magnitude: 5.6, place: "South Africa 🌍", time: Date.now() - 1000 * 60 * 60 * 13, latitude: -30.5595, longitude: 22.9375, depth: 28, source: "USGS" },
-  { id: "africa-3", magnitude: 4.2, place: "Egypt 🏺", time: Date.now() - 1000 * 60 * 60 * 19, latitude: 26.8206, longitude: 30.8025, depth: 10, source: "EMSC" },
-  // North America
-  { id: "na-1", magnitude: 7.8, place: "Alaska, USA 🗻", time: Date.now() - 1000 * 60 * 60 * 3, latitude: 64.2008, longitude: -149.4937, depth: 40, source: "USGS" },
-  { id: "na-2", magnitude: 6.2, place: "California, USA 🌊", time: Date.now() - 1000 * 60 * 60 * 11, latitude: 36.7783, longitude: -119.4179, depth: 17, source: "USGS" },
-  { id: "na-3", magnitude: 4.4, place: "Mexico 🌵", time: Date.now() - 1000 * 60 * 60 * 14, latitude: 23.6345, longitude: -102.5528, depth: 15, source: "USGS" },
-  // South America
-  { id: "sa-1", magnitude: 8.2, place: "Chile 🗻", time: Date.now() - 1000 * 60 * 60 * 5, latitude: -35.6751, longitude: -71.5430, depth: 70, source: "USGS" },
-  { id: "sa-2", magnitude: 6.5, place: "Peru 🏔️", time: Date.now() - 1000 * 60 * 60 * 16, latitude: -9.1900, longitude: -75.0152, depth: 30, source: "USGS" },
-  { id: "sa-3", magnitude: 3.8, place: "Argentina 🌋", time: Date.now() - 1000 * 60 * 60 * 18, latitude: -38.4161, longitude: -63.6167, depth: 20, source: "EMSC" },
-  // Australia/Oceania
-  { id: "au-1", magnitude: 7.1, place: "Papua New Guinea 🌴", time: Date.now() - 1000 * 60 * 60 * 9, latitude: -6.314993, longitude: 143.95555, depth: 22, source: "GEOFON" },
-  { id: "au-2", magnitude: 5.7, place: "New Zealand 🥝", time: Date.now() - 1000 * 60 * 60 * 15, latitude: -40.9006, longitude: 174.8860, depth: 25, source: "GNS" },
-  { id: "au-3", magnitude: 4.0, place: "Australia 🦘", time: Date.now() - 1000 * 60 * 60 * 21, latitude: -25.2744, longitude: 133.7751, depth: 16, source: "GA" },
-  // Antarctica
-  { id: "ant-1", magnitude: 6.0, place: "Antarctica 🧊", time: Date.now() - 1000 * 60 * 60 * 23, latitude: -82.8628, longitude: 135.0000, depth: 12, source: "IRIS" },
-  { id: "ant-2", magnitude: 4.9, place: "West Antarctica ❄️", time: Date.now() - 1000 * 60 * 60 * 25, latitude: -75.2509, longitude: -0.0713, depth: 8, source: "IRIS" },
-  { id: "ant-3", magnitude: 3.5, place: "East Antarctica 🏔️", time: Date.now() - 1000 * 60 * 60 * 27, latitude: -66.9439, longitude: 99.9519, depth: 15, source: "IRIS" },
+  // Asia (5)
+  { id: "asia-1", magnitude: 7.3, place: "Tokyo, Japan 🗾", time: Date.now() - 1000 * 60 * 60 * 8, latitude: 35.6895, longitude: 139.6917, depth: 30, source: "JMA" },
+  { id: "asia-2", magnitude: 5.9, place: "Kathmandu, Nepal 🏔️", time: Date.now() - 1000 * 60 * 60 * 10, latitude: 27.7172, longitude: 85.3240, depth: 18, source: "IMD" },
+  { id: "asia-3", magnitude: 4.3, place: "Islamabad, Pakistan 🇵🇰", time: Date.now() - 1000 * 60 * 60 * 12, latitude: 33.6844, longitude: 73.0479, depth: 25, source: "USGS" },
+  { id: "asia-4", magnitude: 6.5, place: "Manila, Philippines 🏝️", time: Date.now() - 1000 * 60 * 60 * 7, latitude: 14.5995, longitude: 120.9842, depth: 22, source: "PHIVOLCS" },
+  { id: "asia-5", magnitude: 5.2, place: "Taipei, Taiwan 🇹🇼", time: Date.now() - 1000 * 60 * 60 * 9, latitude: 25.0330, longitude: 121.5654, depth: 15, source: "CWB" },
+  
+  // Europe (4)
+  { id: "europe-1", magnitude: 6.8, place: "Athens, Greece 🏺", time: Date.now() - 1000 * 60 * 60 * 7, latitude: 37.9838, longitude: 23.7275, depth: 35, source: "EMSC" },
+  { id: "europe-2", magnitude: 5.3, place: "Rome, Italy 🍕", time: Date.now() - 1000 * 60 * 60 * 14, latitude: 41.9028, longitude: 12.4964, depth: 12, source: "EMSC" },
+  { id: "europe-3", magnitude: 3.7, place: "Ankara, Turkey 🇹🇷", time: Date.now() - 1000 * 60 * 60 * 20, latitude: 39.9334, longitude: 32.8597, depth: 10, source: "KOERI" },
+  { id: "europe-4", magnitude: 4.5, place: "Lisbon, Portugal 🇵🇹", time: Date.now() - 1000 * 60 * 60 * 15, latitude: 38.7223, longitude: -9.1393, depth: 14, source: "EMSC" },
+  
+  // Africa (4)
+  { id: "africa-1", magnitude: 6.4, place: "Marrakesh, Morocco 🕌", time: Date.now() - 1000 * 60 * 60 * 6, latitude: 31.6295, longitude: -7.9811, depth: 20, source: "EMSC" },
+  { id: "africa-2", magnitude: 5.6, place: "Cape Town, South Africa 🇿🇦", time: Date.now() - 1000 * 60 * 60 * 13, latitude: -33.9249, longitude: 18.4241, depth: 28, source: "CGS" },
+  { id: "africa-3", magnitude: 4.2, place: "Cairo, Egypt 🏺", time: Date.now() - 1000 * 60 * 60 * 19, latitude: 30.0444, longitude: 31.2357, depth: 10, source: "ENSN" },
+  { id: "africa-4", magnitude: 5.1, place: "Nairobi, Kenya 🦒", time: Date.now() - 1000 * 60 * 60 * 4, latitude: -1.2921, longitude: 36.8219, depth: 15, source: "USGS" },
+  
+  // North America (4)
+  { id: "na-1", magnitude: 7.8, place: "Anchorage, Alaska 🗻", time: Date.now() - 1000 * 60 * 60 * 3, latitude: 61.2181, longitude: -149.9003, depth: 40, source: "USGS" },
+  { id: "na-2", magnitude: 6.2, place: "San Francisco, California 🌉", time: Date.now() - 1000 * 60 * 60 * 11, latitude: 37.7749, longitude: -122.4194, depth: 17, source: "USGS" },
+  { id: "na-3", magnitude: 4.4, place: "Mexico City, Mexico 🌮", time: Date.now() - 1000 * 60 * 60 * 14, latitude: 19.4326, longitude: -99.1332, depth: 15, source: "SSN" },
+  { id: "na-4", magnitude: 5.7, place: "Vancouver, Canada 🍁", time: Date.now() - 1000 * 60 * 60 * 2, latitude: 49.2827, longitude: -123.1207, depth: 22, source: "USGS" },
+  
+  // South America (4)
+  { id: "sa-1", magnitude: 8.2, place: "Santiago, Chile 🗻", time: Date.now() - 1000 * 60 * 60 * 5, latitude: -33.4489, longitude: -70.6693, depth: 70, source: "USGS" },
+  { id: "sa-2", magnitude: 6.5, place: "Lima, Peru 🏔️", time: Date.now() - 1000 * 60 * 60 * 16, latitude: -12.0464, longitude: -77.0428, depth: 30, source: "IGP" },
+  { id: "sa-3", magnitude: 5.2, place: "Buenos Aires, Argentina 🥩", time: Date.now() - 1000 * 60 * 60 * 18, latitude: -34.6037, longitude: -58.3816, depth: 20, source: "INPRES" },
+  { id: "sa-4", magnitude: 4.8, place: "Bogotá, Colombia ☕", time: Date.now() - 1000 * 60 * 60 * 1, latitude: 4.7110, longitude: -74.0721, depth: 25, source: "SGC" },
+  
+  // Australia/Oceania (3)
+  { id: "au-1", magnitude: 7.1, place: "Port Moresby, Papua New Guinea 🌴", time: Date.now() - 1000 * 60 * 60 * 9, latitude: -9.4438, longitude: 147.1803, depth: 22, source: "GEOFON" },
+  { id: "au-2", magnitude: 5.7, place: "Wellington, New Zealand 🥝", time: Date.now() - 1000 * 60 * 60 * 15, latitude: -41.2865, longitude: 174.7762, depth: 25, source: "GNS" },
+  { id: "au-3", magnitude: 4.0, place: "Sydney, Australia 🦘", time: Date.now() - 1000 * 60 * 60 * 21, latitude: -33.8688, longitude: 151.2093, depth: 16, source: "GA" },
+  
+  // Antarctica (3)
+  { id: "ant-1", magnitude: 6.0, place: "Ross Ice Shelf, Antarctica 🧊", time: Date.now() - 1000 * 60 * 60 * 23, latitude: -81.5000, longitude: 175.0000, depth: 12, source: "IRIS" },
+  { id: "ant-2", magnitude: 4.9, place: "Queen Maud Land, Antarctica ❄️", time: Date.now() - 1000 * 60 * 60 * 25, latitude: -75.2509, longitude: 0.0713, depth: 8, source: "IRIS" },
+  { id: "ant-3", magnitude: 3.5, place: "Antarctic Peninsula 🏔️", time: Date.now() - 1000 * 60 * 60 * 27, latitude: -66.9439, longitude: -60.5519, depth: 15, source: "IRIS" },
 ];
 
 const createMapPin = ({ color, size = 36 }: { color: string; size?: number }) => {
@@ -50,17 +64,36 @@ const createMapPin = ({ color, size = 36 }: { color: string; size?: number }) =>
   element.style.width = `${size}px`;
   element.style.height = `${size}px`;
   
+  // Create SVG for map pin
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('width', size.toString());
   svg.setAttribute('height', size.toString());
   svg.setAttribute('viewBox', '0 0 24 24');
   svg.setAttribute('fill', 'none');
-  svg.innerHTML = `
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="${color}" stroke="white" stroke-width="1.5"/>
-    <circle cx="12" cy="10" r="3" fill="white" fill-opacity="0.8"/>
-  `;
+  svg.setAttribute('stroke', 'white');
+  svg.setAttribute('stroke-width', '1.5');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
   
+  // Create map pin path (using Lucide MapPin shape)
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', 'M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z');
+  path.setAttribute('fill', color);
+  path.setAttribute('stroke', 'white');
+  path.setAttribute('stroke-width', '1.5');
+  
+  // Create circle for pin center
+  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  circle.setAttribute('cx', '12');
+  circle.setAttribute('cy', '10');
+  circle.setAttribute('r', '3');
+  circle.setAttribute('fill', 'white');
+  circle.setAttribute('fill-opacity', '0.9');
+  
+  svg.appendChild(path);
+  svg.appendChild(circle);
   element.appendChild(svg);
+  
   return element;
 };
 
@@ -70,18 +103,44 @@ const createLocationPin = (size = 36) => {
   element.style.width = `${size}px`;
   element.style.height = `${size}px`;
   
+  // Create SVG for location pin
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('width', size.toString());
   svg.setAttribute('height', size.toString());
   svg.setAttribute('viewBox', '0 0 24 24');
   svg.setAttribute('fill', 'none');
-  svg.innerHTML = `
-    <circle cx="12" cy="12" r="10" fill="#64FFDA" fill-opacity="0.95" stroke="#156971" stroke-width="1.5"/>
-    <circle cx="12" cy="12" r="4" fill="white" fill-opacity="0.75"/>
-    <circle cx="12" cy="12" r="1.8" fill="#156971"/>
-  `;
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+
+  // Create map pin path (using Lucide LocateFixed shape)
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', 'M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z');
+  path.setAttribute('fill', '#64FFDA');
+  path.setAttribute('stroke', '#156971');
+  path.setAttribute('stroke-width', '2');
   
+  // Create outer circle
+  const outerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  outerCircle.setAttribute('cx', '12');
+  outerCircle.setAttribute('cy', '10');
+  outerCircle.setAttribute('r', '3');
+  outerCircle.setAttribute('fill', 'white');
+  outerCircle.setAttribute('fill-opacity', '0.9');
+  outerCircle.setAttribute('stroke', '#156971');
+  outerCircle.setAttribute('stroke-width', '1');
+  
+  // Create inner circle
+  const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  innerCircle.setAttribute('cx', '12');
+  innerCircle.setAttribute('cy', '10');
+  innerCircle.setAttribute('r', '1.5');
+  innerCircle.setAttribute('fill', '#156971');
+  
+  svg.appendChild(path);
+  svg.appendChild(outerCircle);
+  svg.appendChild(innerCircle);
   element.appendChild(svg);
+  
   return element;
 };
 
@@ -93,6 +152,7 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
   const { toast } = useToast();
   const markersRef = useRef<mapboxgl.Marker[]>([]);
 
+  // Use provided earthquake data or fallback to our expanded global mock data
   const markersData = Array.isArray(earthquakes) && earthquakes.length > 0
     ? earthquakes
     : globalMockEarthquakes;
@@ -129,17 +189,20 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
               const { latitude, longitude } = position.coords;
               setUserLocation([longitude, latitude]);
               
-              new mapboxgl.Marker({
-                element: createLocationPin(),
-              })
-                .setLngLat([longitude, latitude])
-                .setPopup(
-                  new mapboxgl.Popup({
-                    closeButton: false,
-                    className: 'custom-popup'
-                  }).setHTML("<h3>📍 Your Location</h3>")
-                )
-                .addTo(map.current!);
+              // Add user location marker with the cyan location pin
+              if (map.current) {
+                new mapboxgl.Marker({
+                  element: createLocationPin(),
+                })
+                  .setLngLat([longitude, latitude])
+                  .setPopup(
+                    new mapboxgl.Popup({
+                      closeButton: false,
+                      className: 'custom-popup'
+                    }).setHTML("<h3>📍 Your Current Location</h3>")
+                  )
+                  .addTo(map.current);
+              }
               
               toast({
                 title: "Location found",
@@ -158,8 +221,10 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
       });
 
       return () => {
-        map.current?.remove();
-        setIsMapInitialized(false);
+        if (map.current) {
+          map.current.remove();
+          setIsMapInitialized(false);
+        }
       };
     } catch (error) {
       console.error("Error initializing map:", error);
@@ -175,14 +240,21 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
     if (!map.current || !Array.isArray(markersData) || !isMapInitialized) return;
     
     try {
+      // Clear existing markers
       markersRef.current.forEach(marker => marker.remove());
       markersRef.current = [];
       
+      // Add markers for each earthquake
       markersData.forEach((eq) => {
         if (typeof eq.latitude !== "number" || typeof eq.longitude !== "number") return;
         
-        const markerElement = createMapPin({ color: getMarkerColor(eq.magnitude) });
+        // Create map pin marker with appropriate color based on magnitude
+        const markerElement = createMapPin({ 
+          color: getMarkerColor(eq.magnitude),
+          size: Math.min(36 + eq.magnitude * 2, 50) // Size slightly varies with magnitude
+        });
         
+        // Add hover effects
         markerElement.style.transition = 'transform 0.18s cubic-bezier(0.47,1.64,0.41,0.8)';
         markerElement.style.transform = 'scale(1)';
         markerElement.addEventListener('mouseenter', () => {
@@ -192,6 +264,7 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
           markerElement.style.transform = 'scale(1)';
         });
 
+        // Create and add the marker with popup
         const marker = new mapboxgl.Marker({ element: markerElement })
           .setLngLat([eq.longitude, eq.latitude])
           .setPopup(
@@ -227,6 +300,7 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
           )
           .addTo(map.current!);
           
+        // Store marker reference for cleanup
         markersRef.current.push(marker);
       });
     } catch (error) {
