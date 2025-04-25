@@ -174,7 +174,6 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
         minZoom: 1.2,
         pitch: 30,
         scrollZoom: {
-          speed: 0.9,
           around: 'center'
         }
       });
@@ -280,12 +279,14 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
           size: Math.min(36 + eq.magnitude * 2, 50) // Size slightly varies with magnitude
         });
         
-        // Add hover effects
+        // Hover effect only - Do not scale on click
         markerElement.style.transition = 'transform 0.18s cubic-bezier(0.47,1.64,0.41,0.8)';
         markerElement.style.transform = 'scale(1)';
+        
         markerElement.addEventListener('mouseenter', () => {
           markerElement.style.transform = 'scale(1.18)';
         });
+        
         markerElement.addEventListener('mouseleave', () => {
           markerElement.style.transform = 'scale(1)';
         });
@@ -294,7 +295,8 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
         const marker = new mapboxgl.Marker({ 
           element: markerElement,
           anchor: 'bottom', // Anchor to bottom to prevent shifting
-          offset: [0, 0] // No offset needed with bottom anchor
+          pitchAlignment: 'auto',
+          rotationAlignment: 'auto'
         })
           .setLngLat([eq.longitude, eq.latitude])
           .setPopup(
@@ -359,6 +361,7 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
             transition: transform 0.18s cubic-bezier(0.47,1.64,0.41,0.8);
             z-index: 2;
             transform-origin: center bottom; /* Fix pin at bottom point */
+            pointer-events: auto; /* Ensure clicks are captured */
           }
           .earthquake-marker-pin:hover {
             transform: scale(1.18);
@@ -404,10 +407,23 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
           .mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
             display: block;
           }
-          /* Ensure markers don't move when clicking */
+          /* Fix for markers to stay fixed in place */
           .mapboxgl-marker {
             will-change: transform;
             transform-origin: bottom center !important;
+            pointer-events: auto !important;
+          }
+          .mapboxgl-marker:active,
+          .mapboxgl-marker:focus {
+            cursor: pointer !important;
+          }
+          .mapboxgl-marker .earthquake-marker-pin {
+            pointer-events: auto !important;
+          }
+          .mapboxgl-canvas-container {
+            position: relative;
+            height: 100%;
+            width: 100%;
           }
         `}
       </style>

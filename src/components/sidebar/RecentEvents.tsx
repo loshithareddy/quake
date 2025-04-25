@@ -5,8 +5,11 @@ import { History } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEarthquakes } from "@/lib/api";
 import { format } from "date-fns";
+import { useState } from "react";
 
 export const RecentEvents = () => {
+  const [isOpen, setIsOpen] = useState(true);
+  
   const { data: earthquakes, isLoading } = useQuery({
     queryKey: ["earthquakes"],
     queryFn: fetchEarthquakes,
@@ -16,13 +19,17 @@ export const RecentEvents = () => {
   const events = earthquakes?.slice(0, 5) || [];
 
   return (
-    <Collapsible className="border border-forest/20 rounded-lg">
+    <Collapsible 
+      className="border border-forest/20 rounded-lg"
+      open={isOpen}
+      onOpenChange={setIsOpen}
+    >
       <CollapsibleTrigger className="flex items-center justify-between w-full p-4 bg-forest/10 text-forest hover:bg-forest/20">
         <span className="flex items-center">
           <History className="mr-2" />
           Recent Events
         </span>
-        <ChevronDown className="h-4 w-4" />
+        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'transform rotate-180' : ''}`} />
       </CollapsibleTrigger>
       <CollapsibleContent className="p-4 bg-white/80">
         {isLoading ? (
