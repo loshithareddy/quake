@@ -174,7 +174,6 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
         minZoom: 1.2,
         pitch: 30,
         scrollZoom: {
-          smooth: true,
           speed: 0.9,
           around: 'center'
         }
@@ -218,12 +217,14 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
               if (map.current) {
                 new mapboxgl.Marker({
                   element: createLocationPin(),
+                  anchor: 'bottom' // Ensure marker stays in position
                 })
                   .setLngLat([longitude, latitude])
                   .setPopup(
                     new mapboxgl.Popup({
                       closeButton: false,
-                      className: 'custom-popup'
+                      className: 'custom-popup',
+                      offset: [0, -10] // Add offset for better positioning
                     }).setHTML("<h3>📍 Your Current Location</h3>")
                   )
                   .addTo(map.current);
@@ -290,14 +291,20 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
         });
 
         // Create and add the marker with popup
-        const marker = new mapboxgl.Marker({ element: markerElement })
+        const marker = new mapboxgl.Marker({ 
+          element: markerElement,
+          anchor: 'bottom', // Anchor to bottom to prevent shifting
+          offset: [0, 0] // No offset needed with bottom anchor
+        })
           .setLngLat([eq.longitude, eq.latitude])
           .setPopup(
             new mapboxgl.Popup({
               closeButton: true,
               maxWidth: "320px",
               className: 'earthquake-popup',
-              closeOnClick: false
+              closeOnClick: false,
+              offset: [0, -5], // Slight offset for better positioning
+              anchor: 'bottom' // Anchor popup to bottom of marker
             }).setHTML(`
               <div class="p-3 rounded-lg">
                 <h3 class="font-bold text-lg mb-1 text-gray-900">🌋 Magnitude ${eq.magnitude.toFixed(1)}</h3>
@@ -351,6 +358,7 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
             cursor: pointer;
             transition: transform 0.18s cubic-bezier(0.47,1.64,0.41,0.8);
             z-index: 2;
+            transform-origin: center bottom; /* Fix pin at bottom point */
           }
           .earthquake-marker-pin:hover {
             transform: scale(1.18);
@@ -395,6 +403,11 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
           .mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
           .mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
             display: block;
+          }
+          /* Ensure markers don't move when clicking */
+          .mapboxgl-marker {
+            will-change: transform;
+            transform-origin: bottom center !important;
           }
         `}
       </style>

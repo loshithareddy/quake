@@ -17,38 +17,54 @@ export const RecentEvents = () => {
 
   return (
     <Collapsible className="border border-forest/20 rounded-lg">
-      <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-mint hover:bg-forest/50">
+      <CollapsibleTrigger className="flex items-center justify-between w-full p-4 bg-forest/10 text-forest hover:bg-forest/20">
         <span className="flex items-center">
           <History className="mr-2" />
           Recent Events
         </span>
         <ChevronDown className="h-4 w-4" />
       </CollapsibleTrigger>
-      <CollapsibleContent className="p-4">
+      <CollapsibleContent className="p-4 bg-white/80">
         {isLoading ? (
-          <div className="p-3 bg-forest rounded-lg border border-mint/20 text-center">
-            <p className="text-white/80">Loading recent events...</p>
+          <div className="p-3 bg-gray-50 rounded-lg text-center">
+            <p className="text-gray-600">Loading recent events...</p>
           </div>
         ) : events.length > 0 ? (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {events.map((event) => (
-              <div key={event.id} className="p-3 bg-forest rounded-lg border border-mint/20">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="font-semibold text-white">
+              <div 
+                key={event.id} 
+                className={`p-3 rounded-lg shadow-sm border ${
+                  event.magnitude >= 7 
+                    ? 'bg-red-50 border-red-200' 
+                    : event.magnitude >= 5 
+                    ? 'bg-orange-50 border-orange-200'
+                    : 'bg-green-50 border-green-200'
+                }`}
+              >
+                <div className="flex justify-between items-center">
+                  <span className={`font-semibold ${
+                    event.magnitude >= 7 
+                      ? 'text-red-700' 
+                      : event.magnitude >= 5 
+                      ? 'text-orange-700'
+                      : 'text-green-700'
+                  }`}>
                     {event.magnitude >= 7 ? '⚠️' : event.magnitude >= 5 ? '⚡' : '✅'} 
-                    Magnitude {event.magnitude}
+                    Magnitude {event.magnitude.toFixed(1)}
                   </span>
-                  <span className="text-xs text-white/70">
+                  <span className="text-xs text-gray-600">
                     {format(new Date(event.time), "MMM d, h:mm a")}
                   </span>
                 </div>
-                <p className="text-white/90 text-sm">📍 {event.place}</p>
+                <p className="text-gray-700 text-sm mt-1">📍 {event.place}</p>
+                <p className="text-gray-600 text-xs mt-1">Source: {event.source || 'Unknown'}</p>
               </div>
             ))}
           </div>
         ) : (
-          <div className="p-3 bg-forest rounded-lg border border-mint/20 text-center">
-            <p className="text-white/80">No recent events available</p>
+          <div className="p-3 bg-gray-50 rounded-lg text-center">
+            <p className="text-gray-600">No recent events available</p>
           </div>
         )}
       </CollapsibleContent>
