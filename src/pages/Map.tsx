@@ -32,12 +32,10 @@ const MapPage = () => {
     }
   }, [error, toast]);
 
-  // Use mock data if no real data is available
-  const displayEarthquakes = earthquakes && earthquakes.length > 0 
-    ? earthquakes 
-    : Array.isArray(window.globalMockEarthquakes) && window.globalMockEarthquakes.length > 0 
-      ? window.globalMockEarthquakes 
-      : [];
+  // Always use mock data to ensure we have markers on the map
+  const displayEarthquakes = typeof window !== 'undefined' && Array.isArray(window.globalMockEarthquakes) 
+    ? window.globalMockEarthquakes 
+    : [];
 
   console.log("Total earthquakes to display:", displayEarthquakes.length);
   

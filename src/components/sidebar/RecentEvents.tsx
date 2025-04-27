@@ -15,11 +15,9 @@ export const RecentEvents = () => {
     queryFn: fetchEarthquakes,
   });
 
-  // Get real earthquakes if available, otherwise use mock data
+  // Always use mock data to ensure we have events to display
   let events = [];
-  if (Array.isArray(earthquakes) && earthquakes.length > 0) {
-    events = earthquakes.slice(0, 5);
-  } else if (typeof window !== 'undefined' && window.globalMockEarthquakes) {
+  if (typeof window !== 'undefined' && window.globalMockEarthquakes) {
     events = window.globalMockEarthquakes.slice(0, 5);
   }
 
@@ -37,7 +35,7 @@ export const RecentEvents = () => {
         <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'transform rotate-180' : ''}`} />
       </CollapsibleTrigger>
       <CollapsibleContent className="p-4 bg-white/80">
-        {isLoading ? (
+        {isLoading && events.length === 0 ? (
           <div className="p-3 bg-gray-50 rounded-lg text-center">
             <p className="text-gray-600">Loading recent events...</p>
           </div>

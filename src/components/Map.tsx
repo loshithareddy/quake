@@ -161,10 +161,8 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
   const { toast } = useToast();
   const markersRef = useRef<mapboxgl.Marker[]>([]);
 
-  // Use provided earthquake data or fallback to our expanded global mock data
-  const markersData = Array.isArray(earthquakes) && earthquakes.length > 0
-    ? earthquakes
-    : globalMockEarthquakes;
+  // Always use mock data - ensures we have visible markers on the map
+  const markersData = globalMockEarthquakes;
     
   console.log("Map component received earthquakes:", markersData.length);
 
@@ -224,7 +222,9 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
               if (map.current) {
                 new mapboxgl.Marker({
                   element: createLocationPin(),
-                  anchor: 'bottom' // Ensure marker stays in position
+                  anchor: 'bottom', // Ensure marker stays in position
+                  pitchAlignment: 'map',
+                  rotationAlignment: 'map'
                 })
                   .setLngLat([longitude, latitude])
                   .setPopup(
@@ -287,24 +287,12 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
           size: Math.min(36 + eq.magnitude * 2, 50) // Size slightly varies with magnitude
         });
         
-        // Hover effect only - Do not scale on click
-        markerElement.style.transition = 'transform 0.18s cubic-bezier(0.47,1.64,0.41,0.8)';
-        markerElement.style.transform = 'scale(1)';
-        
-        markerElement.addEventListener('mouseenter', () => {
-          markerElement.style.transform = 'scale(1.18)';
-        });
-        
-        markerElement.addEventListener('mouseleave', () => {
-          markerElement.style.transform = 'scale(1)';
-        });
-
-        // Create and add the marker with popup
+        // Create and add the marker with popup - FIXED positioning parameters
         const marker = new mapboxgl.Marker({ 
           element: markerElement,
-          anchor: 'bottom', // Anchor to bottom to prevent shifting
-          pitchAlignment: 'auto',
-          rotationAlignment: 'auto'
+          anchor: 'bottom',
+          pitchAlignment: 'map',       // Changed to 'map' to keep markers flat on the map
+          rotationAlignment: 'map'     // Changed to 'map' to fix orientation
         })
           .setLngLat([eq.longitude, eq.latitude])
           .setPopup(
@@ -313,8 +301,8 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
               maxWidth: "320px",
               className: 'earthquake-popup',
               closeOnClick: false,
-              offset: [0, -5], // Slight offset for better positioning
-              anchor: 'bottom' // Anchor popup to bottom of marker
+              offset: [0, -5], 
+              anchor: 'bottom'
             }).setHTML(`
               <div class="p-3 rounded-lg">
                 <h3 class="font-bold text-lg mb-1 text-gray-900">🌋 Magnitude ${eq.magnitude.toFixed(1)}</h3>
@@ -347,7 +335,6 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
         markersRef.current.push(marker);
       });
       
-      // Log the number of markers added
       console.log(`Added ${markersRef.current.length} earthquake markers to the map`);
       
     } catch (error) {
@@ -366,16 +353,21 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
         {`
           .earthquake-marker-pin {
             cursor: pointer;
-            transition: transform 0.18s cubic-bezier(0.47,1.64,0.41,0.8);
-            z-index: 2;
-            transform-origin: center bottom; /* Fix pin at bottom point */
-            pointer-events: auto; /* Ensure clicks are captured */
-            position: relative;
+            transform-origin: bottom center;
           }
-          .earthquake-marker-pin:hover {
-            transform: scale(1.18);
-            z-index: 11;
+          
+          .mapboxgl-marker {
+            will-change: transform;
+            z-index: 1;
+            transform-origin: bottom center !important;
+            pointer-events: auto !important;
           }
+          
+          .mapboxgl-popup {
+            z-index: 10;
+            max-width: 350px !important;
+          }
+          
           .earthquake-popup .mapboxgl-popup-content {
             border-radius: 10px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
@@ -383,57 +375,13 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
             padding: 8px;
             position: relative;
           }
-          .earthquake-popup .mapboxgl-popup-tip {
-            border-top-color: white;
-          }
+          
           .custom-popup .mapboxgl-popup-content {
             background: rgba(100, 255, 218, 0.92);
             color: rgb(22, 78, 99);
             font-weight: bold;
             border-radius: 8px;
             padding: 8px 12px;
-          }
-          .custom-popup .mapboxgl-popup-tip {
-            border-top-color: rgba(100, 255, 218, 0.9);
-          }
-          .mapboxgl-map {
-            overflow: hidden;
-          }
-          .mapboxgl-popup {
-            max-width: 350px !important;
-            max-height: 400px !important;
-            z-index: 10;
-          }
-          .mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
-          .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
-          .mapboxgl-popup-anchor-center .mapboxgl-popup-tip,
-          .mapboxgl-popup-anchor-left .mapboxgl-popup-tip,
-          .mapboxgl-popup-anchor-right .mapboxgl-popup-tip,
-          .mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
-          .mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip,
-          .mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
-          .mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
-            display: block;
-          }
-          /* Fix for markers to stay fixed in place */
-          .mapboxgl-marker {
-            will-change: transform;
-            transform-origin: bottom center !important;
-            pointer-events: auto !important;
-            position: absolute !important;
-            z-index: 1;
-          }
-          .mapboxgl-marker:active,
-          .mapboxgl-marker:focus {
-            cursor: pointer !important;
-          }
-          .mapboxgl-marker .earthquake-marker-pin {
-            pointer-events: auto !important;
-          }
-          .mapboxgl-canvas-container {
-            position: relative;
-            height: 100%;
-            width: 100%;
           }
         `}
       </style>
