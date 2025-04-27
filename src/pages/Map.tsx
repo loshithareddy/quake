@@ -33,8 +33,14 @@ const MapPage = () => {
   }, [error, toast]);
 
   // Use mock data if no real data is available
-  const displayEarthquakes = earthquakes && earthquakes.length > 0 ? earthquakes : [];
+  const displayEarthquakes = earthquakes && earthquakes.length > 0 
+    ? earthquakes 
+    : Array.isArray(window.globalMockEarthquakes) && window.globalMockEarthquakes.length > 0 
+      ? window.globalMockEarthquakes 
+      : [];
 
+  console.log("Total earthquakes to display:", displayEarthquakes.length);
+  
   // Count earthquakes by risk level using the displayed earthquakes
   const highRiskCount = displayEarthquakes.filter(eq => eq.magnitude >= 7).length || 0;
   const mediumRiskCount = displayEarthquakes.filter(eq => eq.magnitude >= 5 && eq.magnitude < 7).length || 0;
@@ -97,5 +103,12 @@ const MapPage = () => {
     </div>
   );
 };
+
+// Add this declaration to make the globalMockEarthquakes available on window
+declare global {
+  interface Window {
+    globalMockEarthquakes?: any[];
+  }
+}
 
 export default MapPage;

@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -62,6 +61,11 @@ const globalMockEarthquakes: Earthquake[] = [
   { id: "ant-2", magnitude: 4.9, place: "Queen Maud Land, Antarctica ❄️", time: Date.now() - 1000 * 60 * 60 * 25, latitude: -75.2509, longitude: 0.0713, depth: 8, source: "IRIS" },
   { id: "ant-3", magnitude: 3.5, place: "Antarctic Peninsula 🏔️", time: Date.now() - 1000 * 60 * 60 * 27, latitude: -66.9439, longitude: -60.5519, depth: 15, source: "IRIS" },
 ];
+
+// Make the mock earthquakes globally available for the Map component
+if (typeof window !== 'undefined') {
+  window.globalMockEarthquakes = globalMockEarthquakes;
+}
 
 const createMapPin = ({ color, size = 36 }: { color: string; size?: number }) => {
   const element = document.createElement('div');
@@ -161,6 +165,8 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
   const markersData = Array.isArray(earthquakes) && earthquakes.length > 0
     ? earthquakes
     : globalMockEarthquakes;
+    
+  console.log("Map component received earthquakes:", markersData.length);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -173,9 +179,6 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
         zoom: 1.4,
         minZoom: 1.2,
         pitch: 30,
-        scrollZoom: {
-          around: 'center'
-        }
       });
 
       map.current.on('load', () => {
@@ -183,12 +186,18 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
         map.current?.addControl(new mapboxgl.NavigationControl(), "top-right");
         map.current?.addControl(new mapboxgl.FullscreenControl(), "top-right");
         map.current?.addControl(new mapboxgl.ScaleControl(), "bottom-left");
-        map.current?.setTerrain({ source: 'mapbox-dem', exaggeration: 1.35 });
+        
+        // Add terrain source and layer after the map style is loaded
         map.current?.addSource('mapbox-dem', {
           'type': 'raster-dem',
           'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
           'tileSize': 512,
           'maxzoom': 14
+        });
+        
+        map.current?.setTerrain({ 
+          source: 'mapbox-dem', 
+          exaggeration: 1.35 
         });
         
         // Prevent page scrolling when interacting with the map
@@ -201,9 +210,8 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
           
           // Add touch events for mobile
           mapDiv.addEventListener('touchmove', (e) => {
-            e.preventDefault();
             e.stopPropagation();
-          }, { passive: false });
+          }, { passive: true });
         }
         
         if (navigator.geolocation) {
@@ -362,6 +370,7 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
             z-index: 2;
             transform-origin: center bottom; /* Fix pin at bottom point */
             pointer-events: auto; /* Ensure clicks are captured */
+            position: relative;
           }
           .earthquake-marker-pin:hover {
             transform: scale(1.18);
@@ -391,7 +400,6 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
             overflow: hidden;
           }
           .mapboxgl-popup {
-            transform-origin: bottom center;
             max-width: 350px !important;
             max-height: 400px !important;
             z-index: 10;
@@ -412,6 +420,8 @@ const Map = ({ earthquakes = [] }: { earthquakes?: Earthquake[] }) => {
             will-change: transform;
             transform-origin: bottom center !important;
             pointer-events: auto !important;
+            position: absolute !important;
+            z-index: 1;
           }
           .mapboxgl-marker:active,
           .mapboxgl-marker:focus {

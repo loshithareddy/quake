@@ -15,8 +15,13 @@ export const RecentEvents = () => {
     queryFn: fetchEarthquakes,
   });
 
-  // Get the 5 most recent events
-  const events = earthquakes?.slice(0, 5) || [];
+  // Get real earthquakes if available, otherwise use mock data
+  let events = [];
+  if (Array.isArray(earthquakes) && earthquakes.length > 0) {
+    events = earthquakes.slice(0, 5);
+  } else if (typeof window !== 'undefined' && window.globalMockEarthquakes) {
+    events = window.globalMockEarthquakes.slice(0, 5);
+  }
 
   return (
     <Collapsible 
@@ -78,3 +83,10 @@ export const RecentEvents = () => {
     </Collapsible>
   );
 };
+
+// Add TypeScript interface for window globals
+declare global {
+  interface Window {
+    globalMockEarthquakes?: any[];
+  }
+}
